@@ -3,50 +3,31 @@ package view.components;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 
 public class TypesView extends GridPane {
 
     public enum PokemonElement {
-        NORMAL("#A8A77A"),
-        FIRE("#EE8130"),
-        WATER("#6390F0"),
-        ELECTRIC("#F7D02C"),
-        GRASS("#7AC74C"),
-        ICE("#96D9D6"),
-        FIGHTING("#C22E28"),
-        POISON("#A33EA1"),
-        GROUND("#E2BF65"),
-        FLYING("#A98FF3"),
-        PSYCHIC("#F95587"),
-        BUG("#A6B91A"),
-        ROCK("#B6A136"),
-        GHOST("#735797"),
-        DRAGON("#6F35FC"),
-        DARK("#705746"),
-        STEEL("#B7B7CE"),
-        FAIRY("#D685AD");
+        NORMAL,
+        FIRE,
+        WATER,
+        ELECTRIC,
+        GRASS,
+        ICE,
+        FIGHTING,
+        POISON,
+        GROUND,
+        FLYING,
+        PSYCHIC,
+        BUG,
+        ROCK,
+        GHOST,
+        DRAGON,
+        DARK,
+        STEEL,
+        FAIRY;
 
-        private final Color color;
-
-        PokemonElement(String hex) {
-            this.color = Color.web(hex);
-        }
-
-        /**
-         * Returns the background color for the Pokemon element type.
-         *
-         * @return a Background object with the appropriate color and corner radius
-        */
-        // It's a little like implementing in Rust.
-        public Background getBackground() {
-            return new Background(
-                    new BackgroundFill(
-                            color,
-                            new CornerRadii(8),
-                            Insets.EMPTY
-                    )
-            );
+        public String toLowerCase() {
+            return name().toLowerCase();
         }
     }
 
@@ -74,9 +55,8 @@ public class TypesView extends GridPane {
     private Label createElementLabel(PokemonElement type) {
         Label element = new Label(type.name());
 
-        element.setBackground(type.getBackground());
-        element.setTextFill(Color.WHITE);
-        element.setPadding(new Insets(5, 10, 5, 10));
+        element.getStyleClass().add("pokemon-type");
+        element.getStyleClass().add(type.toLowerCase());
 
         return element;
     }
