@@ -22,8 +22,8 @@ public class PokemonTypesDOA {
         try (Connection co = Connexion.ouvrir();
              PreparedStatement ps = co.prepareStatement(sql)) {
 
-            ps.setInt(2, pt.pokemon_id);
-            ps.setInt(3, pt.type_id);
+            ps.setInt(1, pt.pokemon_id);
+            ps.setInt(2, pt.type_id);
             ps.executeUpdate();
         }
     }
@@ -38,8 +38,8 @@ public class PokemonTypesDOA {
 
             while (rs.next()) {
                 PokemonTypes pt = new PokemonTypes();
-                pt.pokemon_id = rs.getInt("pokemonId");
-                pt.type_id = rs.getInt("typeId");
+                pt.pokemon_id = rs.getInt("pokemon_id");
+                pt.type_id = rs.getInt("type_id");
                 all.add(pt);
             }
         }

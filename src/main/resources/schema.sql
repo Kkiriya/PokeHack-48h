@@ -52,7 +52,6 @@ CREATE TABLE ability
 CREATE TABLE pokemon
 (
     id              INT PRIMARY KEY  NOT NULL,
-    ability_id      int,
     base_experience int              NOT NULL,
     cries           TEXT, -- contains the cries sound url
     height          DOUBLE PRECISION NOT NULL,
@@ -65,12 +64,7 @@ CREATE TABLE pokemon
     special_attack  INT              NOT NULL,
     special_defense INT              NOT NUlL,
     speed           INT              NOT NULL,
-    weight          DOUBLE PRECISION NOT NULL,
-
-    CONSTRAINT fk_pokemon_ability
-        FOREIGN KEY (ability_id)
-            REFERENCES ability (id)
-            ON DELETE SET NULL
+    weight          DOUBLE PRECISION NOT NULL
 );
 
 CREATE TABLE type
@@ -146,4 +140,23 @@ CREATE TABLE pokemon_types
             REFERENCES type (id)
             ON DELETE CASCADE
 );
+
+CREATE TABLE pokemon_abilities
+(
+    pokemon_id INT  NOT NULL,
+    ability_id INT  NOT NULL,
+    is_hidden  bool NOT NULL DEFAULT false,
+
+    PRIMARY KEY (pokemon_id, ability_id),
+
+    CONSTRAINT fk_pokemon_abilities_pokemon
+        FOREIGN KEY (pokemon_id)
+            REFERENCES pokemon (id)
+            ON DELETE CASCADE,
+
+    CONSTRAINT fk_pokemon_abilities_ability
+        FOREIGN KEY (ability_id)
+            REFERENCES ability (id)
+            ON DELETE CASCADE
+)
 
