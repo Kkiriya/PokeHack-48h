@@ -68,8 +68,10 @@ CREATE TABLE pokemon (
 CREATE TABLE type (
                       id INT PRIMARY KEY NOT NULL,
                       name TEXT NOT NULL,
-                      double_damage_to jsonb NOT NULL, -- { "grass": true, "water": false, ... }
+                      double_damage_from jsonb NOT NULL, -- { "grass": true, "water": false, ... }
+                      double_damage_to jsonb NOT NULL,
                       half_damage_from jsonb NOT NULL,
+                      half_damage_to jsonb NOT NULL,
                       no_damage_from jsonb NOT NULL,
                       no_damage_to jsonb NOT NULL,
                       move_damage_class MoveDmgClass NOT NULL,
