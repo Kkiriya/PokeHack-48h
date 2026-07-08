@@ -15,6 +15,9 @@ public class CardInfoButtons extends VBox {
         spritesButton = new Button("Sprites");
         idButton = new Button("ID");
 
-        getChildren().addAll(statsButton, typesButton, spritesButton, idButton);
+        VBox buttonBox = new VBox(statsButton, typesButton, spritesButton, idButton);
+        buttonBox.setSpacing(10);
+
+        getChildren().add(buttonBox);
     }
 }
