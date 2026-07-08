@@ -5,7 +5,6 @@ import java.util.Map;
 
 public class Pokemon {
     public int id;
-    public int ability_id;
     public int baseExperience;
     public String cries;
     public double height;
