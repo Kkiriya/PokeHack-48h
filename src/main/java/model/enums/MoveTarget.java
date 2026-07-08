@@ -1,0 +1,17 @@
+package model.enums;
+
+public enum MoveTarget {
+    SPECIFIC_MOVE,
+    SELECTED_POKEMON_ME_FIRST,
+    ALLY,
+    USER_FIELD,
+    OPPONENTS_FIELD,
+    USER,
+    RANDOM_OPPONENT,
+    ALL_OTHER_POKEMON,
+    ENTIRE_FIELD,
+    USER_AND_ALLIES,
+    ALL_POKEMON,
+    ALL_ALLIES,
+    FAINTING_POKEMON
+}
