@@ -5,26 +5,26 @@ DROP DATABASE IF EXISTS PokeHacks;
 
 CREATE DATABASE PokeHacks;
 
-DROP TYPE IF EXISTS MoveTarget;
-DROP TYPE IF EXISTS MoveDmgClass;
-
 DROP TABLE IF EXISTS ability;
 DROP TABLE IF EXISTS pokemon;
 DROP TABLE IF EXISTS type;
 DROP TABLE IF EXISTS move;
-DROP TABLE IF EXISTS pokemonMoves;
-DROP TABLE IF EXISTS pokemonTypes;
+DROP TABLE IF EXISTS pokemon_moves;
+DROP TABLE IF EXISTS pokemon_types;
+
+DROP TYPE IF EXISTS move_target;
+DROP TYPE IF EXISTS move_dmg_class;
 
 -- ENUMS --
 -- would be cool to dynamically generate the enums w/ a script later on
 
-CREATE TYPE MoveDmgClass AS ENUM (
+CREATE TYPE move_dmg_class AS ENUM (
     'STATUS',
     'PHYSICAL',
     'SPECIAL'
     );
 
-CREATE TYPE MoveTarget AS ENUM (
+CREATE TYPE move_target AS ENUM (
     'SPECIFIC_MOVE',
     'SELECTED_POKEMON_ME_FIRST',
     'ALLY',
@@ -41,92 +41,109 @@ CREATE TYPE MoveTarget AS ENUM (
     );
 
 -- TABLES --
-CREATE TABLE ability (
-                         id INT PRIMARY KEY NOT NULL,
-                         effect_entries TEXT,
-                         flavor_text_entries TEXT,
-                         name TEXT NOT NULL
-);
-
-CREATE TABLE pokemon (
-    id INT PRIMARY KEY NOT NULL,
-    ability_id int NOT NULL,
-    base_experience int NOT NULL,
-    cries TEXT, -- contains the cries sound url
-    height FLOAT NOT NULL ,
-    name TEXT NOT NULL,
-    species TEXT NOT NULL,
-    sprites TEXT, -- contains the sprite img url
-    stats jsonb NOT NULL, -- { "hp": 20, "attack": 4, ... }
-    weight FLOAT NOT NULL,
-
-    CONSTRAINT fk_ability
-                     FOREIGN KEY (ability_id)
-                     REFERENCES ability(id)
-);
-
-CREATE TABLE type (
-                      id INT PRIMARY KEY NOT NULL,
-                      name TEXT NOT NULL,
-                      double_damage_from jsonb NOT NULL, -- { "grass": true, "water": false, ... }
-                      double_damage_to jsonb NOT NULL,
-                      half_damage_from jsonb NOT NULL,
-                      half_damage_to jsonb NOT NULL,
-                      no_damage_from jsonb NOT NULL,
-                      no_damage_to jsonb NOT NULL,
-                      move_damage_class MoveDmgClass NOT NULL,
-                      sprites TEXT NOT NULL -- contains the sprite img url
-);
-
-CREATE TABLE move (
-    id INT PRIMARY KEY NOT NULL,
-    accuracy INT NOT NULL,
-    damage_class MoveDmgClass NOT NULL,
-    effect_chance TEXT,
-    effect_change TEXT,
-    effect_entries TEXT,
+CREATE TABLE ability
+(
+    id                  INT PRIMARY KEY NOT NULL,
+    effect_entries      TEXT,
     flavor_text_entries TEXT,
-    learned_by_pokemon jsonb NOT NULL, -- { "1" : { "pokemon": "bulbasaur"}... }
-    name TEXT NOT NULL,
-    power INT NOT NULL,
-    pp INT NOT NULL,
-    priority INT NOT NULL,
-    stat_changes jsonb, -- { "hp": 5 // represents the stat change, "attack": -5, ... }
-    target MoveTarget NOT NULL,
-    typeId int NOT NULL,
+    name                TEXT            NOT NULL UNIQUE
+);
+
+CREATE TABLE pokemon
+(
+    id              INT PRIMARY KEY  NOT NULL,
+    ability_id      int,
+    base_experience int              NOT NULL,
+    cries           TEXT, -- contains the cries sound url
+    height          DOUBLE PRECISION NOT NULL,
+    name            TEXT             NOT NULL UNIQUE,
+    species         TEXT             NOT NULL,
+    sprites         TEXT, -- contains the sprite img url
+    hp              INT              NOT NULL,
+    attack          INT              NOT NULL,
+    defense         INT              NOT NULL,
+    special_attack  INT              NOT NULL,
+    special_defense INT              NOT NUlL,
+    speed           INT              NOT NULL,
+    weight          DOUBLE PRECISION NOT NULL,
+
+    CONSTRAINT fk_pokemon_ability
+        FOREIGN KEY (ability_id)
+            REFERENCES ability (id)
+            ON DELETE SET NULL
+);
+
+CREATE TABLE type
+(
+    id                 INT PRIMARY KEY NOT NULL,
+    name               TEXT            NOT NULL UNIQUE,
+    double_damage_from TEXT            NOT NULL,
+    double_damage_to   TEXT            NOT NULL,
+    half_damage_from   TEXT            NOT NULL,
+    half_damage_to     TEXT            NOT NULL,
+    no_damage_from     TEXT            NOT NULL,
+    no_damage_to       TEXT            NOT NULL,
+    move_damage_class  move_dmg_class  NOT NULL,
+    sprites            TEXT            NOT NULL -- contains the sprite img url
+);
+
+CREATE TABLE move
+(
+    id                  INT PRIMARY KEY NOT NULL,
+    accuracy            INT             NOT NULL,
+    damage_class        move_dmg_class  NOT NULL,
+    effect_change       TEXT,
+    effect_entries      TEXT,
+    flavor_text_entries TEXT,
+    name                TEXT            NOT NULL UNIQUE,
+    power               INT             NOT NULL,
+    pp                  INT             NOT NULL,
+    priority            INT             NOT NULL,
+    stat_changes        TEXT,
+    target              move_target     NOT NULL,
+    type_id             INT             NOT NULL,
 
     CONSTRAINT fk_type
-                  FOREIGN KEY (typeId)
-                  REFERENCES type(id)
+        FOREIGN KEY (type_id)
+            REFERENCES type (id)
+            ON DELETE RESTRICT
 );
 
 -- JUNCTION TABLES --
 
-CREATE TABLE pokemonMoves (
-                              id INT PRIMARY KEY NOT NULL,
-                              pokemonId INT NOT NULL,
-                              moveId INT NOT NULL,
+CREATE TABLE pokemon_moves
+(
+    pokemon_id INT NOT NULL,
+    move_id    INT NOT NULL,
 
-                              CONSTRAINT fK_pokemon_moves
-                                  FOREIGN KEY (pokemonId)
-                                      REFERENCES pokemon(id),
+    PRIMARY KEY (pokemon_id, move_id),
 
-                              CONSTRAINT fk_move
-                                  FOREIGN KEY (moveId)
-                                      REFERENCES move(id)
+    CONSTRAINT fK_pokemon_moves
+        FOREIGN KEY (pokemon_id)
+            REFERENCES pokemon (id)
+            ON DELETE CASCADE,
+
+    CONSTRAINT fk_move
+        FOREIGN KEY (move_id)
+            REFERENCES move (id)
+            ON DELETE CASCADE
 );
 
-CREATE TABLE pokemonTypes (
-                              id INT PRIMARY KEY NOT NULL,
-                              pokemonId INT NOT NULL,
-                              typeId INT NOT NULL,
+CREATE TABLE pokemon_types
+(
+    pokemon_id INT NOT NULL,
+    type_id    INT NOT NULL,
 
-                              CONSTRAINT fk_pokemon_types
-                                  FOREIGN KEY (pokemonId)
-                                      REFERENCES pokemon(id),
+    PRIMARY KEY (pokemon_id, type_id),
 
-                              CONSTRAINT  fk_move_types
-                                  FOREIGN KEY (typeId)
-                                      REFERENCES type(id)
+    CONSTRAINT fk_pokemon_types
+        FOREIGN KEY (pokemon_id)
+            REFERENCES pokemon (id)
+            ON DELETE CASCADE,
+
+    CONSTRAINT fk_move_types
+        FOREIGN KEY (type_id)
+            REFERENCES type (id)
+            ON DELETE CASCADE
 );
 
