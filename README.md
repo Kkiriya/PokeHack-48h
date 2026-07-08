@@ -1,16 +1,22 @@
-# Hackaton 48
-Le but de ce hackaton est de créer une application web qui permet aux utilisateurs de rechercher et d'afficher des informations sur les pokémons. L'application doit être interactive et facile à utiliser, avec une interface utilisateur attrayante.
+# Travail présenté par : 
+Jean-Simon Cyr (Frontend) et Emile Valade (Backend)
 
 ---
-# Données pokémon à afficher
 
-- Type (liste) enum d'éléments
-- Weakness (liste) enum d'éléments
-- Nom
-- Évolutions
-- 4 moves par pokémon
-- Stats (HP, Attack, Defense, Special Attack, Special Defense, Speed) dictionnaire
-- Image du pokémon
-- cries
-- height float
-- weight float
+# Description du projet
+Hackathon de 48 heures pour développer une application avec le langage Java. L'application consiste à créer un
+pokédex qui permet de consulter les informations des Pokemon et de les ajouter à une liste de capturés.
+
+---
+
+# Screenshots
+
+---
+
+# Instruction de setup
+
+---
+
+# Liste des bonus implémentés
+
+---
