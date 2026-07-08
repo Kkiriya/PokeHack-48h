@@ -3,13 +3,6 @@ package model;
 public class Type {
     public int id;
     public String name;
-    public String double_damage_from;
-    public String double_damage_to;
-    public String half_damage_from;
-    public String half_damage_to;
-    public String no_damage_from;
-    public String no_damage_to;
-    public String move_damage_class;
     public String sprites;
 
     public Type() {}
