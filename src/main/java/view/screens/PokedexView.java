@@ -1,7 +1,6 @@
 package view.screens;
 
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.layout.*;
 import view.components.*;
@@ -18,9 +17,7 @@ public class PokedexView {
 
         // Left section contains the search box, Pokemon image, and stats
         SearchView searchBox = new SearchView();
-
         FilterView filterView = new FilterView();
-
 
         leftBox = new VBox(searchBox,filterView);
         leftBox.setPadding(new Insets(10));

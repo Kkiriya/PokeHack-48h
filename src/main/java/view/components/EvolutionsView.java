@@ -38,13 +38,15 @@ public class EvolutionsView extends VBox {
      * @return a centered VBox containing the image and name
      */
     private VBox createEvolutionBox(String name, String imageUrl) {
-        ImageView image = new ImageView(new Image(imageUrl));
+        ImageView image = new ImageView(new Image(imageUrl, true));
         image.setFitWidth(EVOLUTION_IMAGE_WIDTH);
         image.setFitHeight(EVOLUTION_IMAGE_HEIGHT);
         image.setPreserveRatio(true);
+        image.setSmooth(true);
 
         VBox box = new VBox(5, image, new Label(name));
         box.setAlignment(Pos.CENTER);
+        box.setMinWidth(EVOLUTION_IMAGE_WIDTH);
         return box;
     }
 }

@@ -1,5 +1,6 @@
 package view.screens;
 
+import javafx.geometry.Insets;
 import javafx.scene.layout.HBox;
 import view.components.CardInfoButtons;
 import view.components.ImageView;
@@ -17,22 +18,28 @@ public class FilterView extends HBox {
         ImageView imageView = new ImageView();
         HBox contentPane = new HBox();
 
+        contentPane.setSpacing(10);
+        contentPane.setPadding(new Insets(10));
+        contentPane.setMinSize(260, 260);
+        contentPane.setPrefSize(260, 260);
+
         contentPane.getChildren().add(imageView);
 
-        cardInfoButtons.spritesButton.setOnAction(e -> {;
+        cardInfoButtons.spritesButton.setOnAction(e -> {
             contentPane.getChildren().setAll(imageView);
         });
 
-        cardInfoButtons.statsButton.setOnAction(e -> {;
+        cardInfoButtons.statsButton.setOnAction(e -> {
             StatsView statsView = new StatsView();
             contentPane.getChildren().setAll(statsView);
         });
 
-        cardInfoButtons.typesButton.setOnAction(e -> {;
+        cardInfoButtons.typesButton.setOnAction(e -> {
             TypesView typesView = new TypesView();
             contentPane.getChildren().setAll(typesView);
         });
 
+        setSpacing(10);
         getChildren().addAll(cardInfoButtons, contentPane);
     }
 }
