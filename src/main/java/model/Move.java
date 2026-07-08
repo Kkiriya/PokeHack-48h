@@ -14,7 +14,7 @@ public class Move {
     public int pp;
     public int priority;
     public String stat_changes;
-    public MoveTarget target;
+    public String target;
     public int typeId;
 
     public Move() {}
