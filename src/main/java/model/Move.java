@@ -3,7 +3,7 @@ package model;
 public class Move {
     public int id;
     public int accuracy;
-    public int damage_class;
+    public String damage_class;
     public String effect_chance;
     public String effect_change;
     public String effect_entries;
