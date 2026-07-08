@@ -64,6 +64,7 @@ public class PokemonDAO {
 
     public void supprimer(int id) throws SQLException {
         String sql = "DELETE FROM pokemon WHERE id = ?";
+
         try (Connection co = Connexion.ouvrir();
              PreparedStatement ps = co.prepareStatement(sql)) {
 

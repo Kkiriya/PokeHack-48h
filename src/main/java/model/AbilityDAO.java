@@ -49,6 +49,7 @@ public class AbilityDAO {
 
     public void supprimer(int id) throws SQLException {
         String sql = "DELETE FROM ability WHERE id = ?";
+
         try (Connection co = Connexion.ouvrir();
              PreparedStatement ps = co.prepareStatement(sql)) {
 
