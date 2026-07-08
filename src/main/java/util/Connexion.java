@@ -17,7 +17,7 @@ public class Connexion {
     private  static final String USER = dotenv.get("DB_USER");
     private static final String PASS = dotenv.get("DB_PASSWORD");
 
-    // Private constructer: no instance, static methods only
+    // Private constructor: no instance, static methods only
     private Connexion() {}
 
     public static Connection ouvrir() throws SQLException {
