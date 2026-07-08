@@ -18,10 +18,11 @@ public class PokedexView {
 
         // Left section contains the search box, Pokemon image, and stats
         SearchView searchBox = new SearchView();
-        ImageView pokemonImageFrame = new ImageView();
-        StatsView statsGrid = new StatsView();
 
-        leftBox = new VBox(searchBox,pokemonImageFrame, statsGrid);
+        FilterView filterView = new FilterView();
+
+
+        leftBox = new VBox(searchBox,filterView);
         leftBox.setPadding(new Insets(10));
 
 
@@ -29,12 +30,10 @@ public class PokedexView {
         BorderPane.setMargin(leftBox, new Insets(10, 0, 0, 50)); // Adjust the left margin to move the leftBox down and to the right
 
         // Center
-        CapturedListView capturedListView = new CapturedListView();
-        FilterView filterView = new FilterView();
         EvolutionsView evolutionsView = new EvolutionsView();
-        VBox centerBox = new VBox(capturedListView, filterView,evolutionsView);
+        CapturedListView capturedListView = new CapturedListView();
+        VBox centerBox = new VBox(capturedListView, evolutionsView);
         centerBox.setSpacing(10);
-
         root.setCenter(centerBox);
         BorderPane.setMargin(centerBox, new Insets(10, 200, 0, 0));
     }
