@@ -5,16 +5,20 @@ import java.util.Map;
 
 public class Pokemon {
     public int id;
-    public int abilityId;
+    public int ability_id;
     public int baseExperience;
     public String cries;
-    public float height;
+    public double height;
     public String name;
     public String species;
     public String sprites;
-    public String stats;
-    public float weight;
-    public String types;
+    public int hp;
+    public int attack;
+    public int defense;
+    public int special_attack;
+    public int special_defense;
+    public int speed;
+    public double weight;
 
     public Pokemon() {}
 

@@ -14,8 +14,9 @@ public class PokemonDAO {
     public void sauvegarder(Pokemon p) throws SQLException {
         String sql =
                 "INSERT INTO pokemon"
-                + "(id, ability_id, base_experience, cries, height, name, species, sprites, stats, weight)"
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                + "(id, ability_id, base_experience, cries, height, name, species, sprites, hp, attack, defense, " +
+                        "special_attack, special_defense, speed, weight)"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
                 + "ON CONFLICT (id) DO UPDATE SET "
                 + "name=EXCLUDED.name";
 
@@ -23,15 +24,20 @@ public class PokemonDAO {
              PreparedStatement ps = co.prepareStatement(sql)) {
 
             ps.setInt(1, p.id);
-            ps.setInt(2, p.abilityId);
+            ps.setInt(2, p.ability_id);
             ps.setInt(3, p.baseExperience);
             ps.setString(4, p.cries);
-            ps.setFloat(5, p.height);
+            ps.setDouble(5, p.height);
             ps.setString(6, p.name);
             ps.setString(7, p.species);
             ps.setString(8, p.sprites);
-            ps.setString(9, p.stats);
-            ps.setFloat(10, p.weight);
+            ps.setInt(9, p.hp);
+            ps.setInt(10, p.attack);
+            ps.setInt(11, p.defense);
+            ps.setInt(12, p.special_attack);
+            ps.setInt(13, p.special_defense);
+            ps.setInt(14, p.special_defense);
+            ps.setDouble(15, p.weight);
             ps.executeUpdate();
         }
     }
@@ -47,15 +53,20 @@ public class PokemonDAO {
             while (rs.next()) {
                 Pokemon p = new Pokemon();
                 p.id = rs.getInt("id");
-                p.abilityId = rs.getInt("ability_id");
+                p.ability_id = rs.getInt("ability_id");
                 p.baseExperience = rs.getInt("base_experience");
                 p.cries = rs.getString("cries");
-                p.height = rs.getFloat("height");
+                p.height = rs.getDouble("height");
                 p.name = rs.getString("name");
                 p.species = rs.getString("species");
                 p.sprites = rs.getString("sprites");
-                p.stats = rs.getString("stats");
-                p.weight = rs.getFloat("weight");
+                p.hp = rs.getInt("hp");
+                p.attack = rs.getInt("attack");
+                p.defense = rs.getInt("defense");
+                p.special_attack = rs.getInt("special_attack");
+                p.special_defense = rs.getInt("special_defense");
+                p.speed = rs.getInt("speed");
+                p.weight = rs.getDouble("weight");
                 all.add(p);
             }
         }
