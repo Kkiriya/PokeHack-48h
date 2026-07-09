@@ -272,15 +272,21 @@ public class PokedexController {
      * @param text The text entered in the search box.
      */
     private void previewPokemonFromSearchBox(String text) {
-        if (text.isEmpty()) {
+        if (text.isBlank()) {
             return;
         }
 
+        Pokemon pokemon;
+
         try {
-            int id = Integer.parseInt(text);
-            Pokemon pokemon = service.recupererPokemon(id);
+            if (text.strip().matches("^[0-9]$")) {
+                pokemon = service.recupererPokemon(Integer.parseInt(text));
+            } else {
+                pokemon = service.recupererPokemonParNom(text);
+            }
             displayLeftPreview(pokemon);
         } catch (Exception e) {
+            displayLeftPreview(null);
             // TODO: Display error on screen instead of printing to console
             System.err.println("Error previewing Pokemon: " + e.getMessage());
         }
