@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.media.AudioClip;
 
 public class PokedexController {
     // Data Base
@@ -228,6 +229,11 @@ public class PokedexController {
                 view.filterView.typesView.typeOne.getStyleClass().add(typeOne.name);
                 view.filterView.typesView.typeOne.getStyleClass().add("pokemon-type");
             }
+            // Click event to play his cry when clicked
+            view.filterView.imageView.pokemonImage.setOnMouseClicked(e -> {
+                //playPokemonCry(pokemon);
+                System.out.println("Cry URL: " + pokemon.cries);
+            });
 
             if (pokemonTypes.size() >= 2) {
                 Type typeTwo = service.recupererType(pokemonTypes.get(1).type_id);
@@ -267,6 +273,13 @@ public class PokedexController {
             view.statsGrid.specialAttack.setText(String.valueOf(pokemon.special_attack));
             view.statsGrid.specialDefense.setText(String.valueOf(pokemon.special_defense));
             view.statsGrid.speed.setText(String.valueOf(pokemon.speed));
+
+            // Click event for the preview Pokemon image in the left box
+            view.pokemonImageFrame.pokemonImage.setOnMouseClicked(e -> {
+                //playPokemonCry(pokemon);
+                System.out.println("Cry URL: " + pokemon.cries);
+            });
+
         } else {
             // Clear the preview if no Pokemon is provided
             view.pokemonImageFrame.pokemonImage.setImage(null);
@@ -299,5 +312,10 @@ public class PokedexController {
             // TODO: Display error on screen instead of printing to console
             System.err.println("Error previewing Pokemon: " + e.getMessage());
         }
+    }
+
+    private void playPokemonCry(Pokemon pokemon) {
+        AudioClip cry = new AudioClip(pokemon.cries);
+        cry.play();
     }
 }
