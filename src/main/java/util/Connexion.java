@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class Connexion {
     private static final Dotenv dotenv = Dotenv.load(); // loads .env
     private static final String URL = String.format(
-            "jbdc:postgressql://%s:%s/%s",
+            "jdbc:postgresql://%s:%s/%s",
             dotenv.get("DB_HOST"),
             dotenv.get(
             "DB_PORT"),

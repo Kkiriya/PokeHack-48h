@@ -12,10 +12,11 @@ import view.components.TypesView;
  * It uses CardInfoButtons for the buttons and dynamically updates the content pane based on user interaction.
  */
 public class FilterView extends HBox {
+    public final ImageView imageView;
 
     public FilterView() {
         CardInfoButtons cardInfoButtons = new CardInfoButtons();
-        ImageView imageView = new ImageView();
+        imageView = new ImageView();
         HBox contentPane = new HBox();
 
         contentPane.setSpacing(10);
