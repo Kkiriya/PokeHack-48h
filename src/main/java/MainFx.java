@@ -4,6 +4,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import view.screens.PokedexView;
 
+import java.sql.SQLException;
+
 public class MainFx extends Application {
 
     @Override
