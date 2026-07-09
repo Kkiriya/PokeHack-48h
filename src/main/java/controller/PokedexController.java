@@ -1,18 +1,20 @@
 package controller;
 
 import javafx.scene.image.Image;
-import model.PokemonDAO;
-import model.PokemonTypesDOA;
+import model.*;
 import service.PokeApiService;
 import view.screens.PokedexView;
-import model.Pokemon;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class PokedexController {
+    // Data Base
     private final PokemonDAO pokemonDAO = new PokemonDAO();
     private final PokemonTypesDOA pokemonTypesDAO = new PokemonTypesDOA();
+    // API Service
     private final PokeApiService service = new PokeApiService();
+    // View
     private final PokedexView view;
 
 
@@ -31,12 +33,17 @@ public class PokedexController {
                         //TODO: Try with array method.
                         for (Pokemon pokemon : pokemonDAO.lister()) {
                             if (pokemon.name.equals(newValue)) {
-                                displayCardPokedex(pokemon);
+
+                                List<PokemonTypes> pokemonTypes = service.recupererPokemonTypes(pokemon.id);
+
+                                displayCardPokedex(pokemon ,pokemonTypes);
                                 break;
                             }
                         }
                     } catch (SQLException ex) {
                         throw new RuntimeException(ex);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
                     }
                 }
         );
@@ -50,13 +57,17 @@ public class PokedexController {
                 return;
             }
             deletePokemon(selectedPokemon);
-            displayCardPokedex(null);
+            try {
+                displayCardPokedex(null, null);
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
         });
 
         // To see the preview of the pokemon before catching it.
         view.searchBox.searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             previewPokemonFromSearchBox(newValue);
-            if(newValue == null || newValue.isEmpty()) {
+            if (newValue == null || newValue.isEmpty()) {
                 displayLeftPreview(null);
             }
         });
@@ -69,10 +80,20 @@ public class PokedexController {
 
         System.out.println("Loading Pokemon with ID: " + id);
         try {
+            // Retrieve Pokemon data from the API
             Pokemon pokemon = service.recupererPokemon(id);
-            displayCardPokedex(pokemon);
+            List<PokemonTypes> pokemonTypes = service.recupererPokemonTypes(pokemon.id);
+
+            // Save the Pokemon data to the database
             pokemonDAO.sauvegarder(pokemon);
+            for (PokemonTypes pokemonType : pokemonTypes) {
+                // Save the Pokemon type data to the database
+                pokemonTypesDAO.sauvegarder(pokemonType);
+            }
+
+            displayCardPokedex(pokemon, pokemonTypes);
             refreshList();
+
         } catch (Exception e) {
             // TODO: Display error on screen instead of printing to console
             // Handle exceptions (e.g., show an error message in the view)
@@ -91,12 +112,14 @@ public class PokedexController {
             for (Pokemon pokemon : pokemonDAO.lister()) {
                 if (pokemon.name.equals(name)) {
                     pokemonDAO.supprimer(pokemon.id);
-                    displayCardPokedex(null); // Clear
+                    displayCardPokedex(null, null); // Clear
                     break;
                 }
             }
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
         refreshList();
     }
@@ -128,7 +151,7 @@ public class PokedexController {
      *
      * @param pokemon The Pokemon object containing the details to display.
      */
-    private void displayCardPokedex(Pokemon pokemon) {
+    private void displayCardPokedex(Pokemon pokemon, List<PokemonTypes> pokemonTypes) throws Exception {
         // Update the view with the Pokemon data
         if (pokemon != null) {
             // sprite
@@ -144,7 +167,26 @@ public class PokedexController {
             // id
             view.filterView.id = pokemon.id;
             // types
-            // TODO: Implement displaying types in the view. Check how to get types from the Pokemon object or the API response.
+            // TODO: ----
+            if (pokemonTypes.size() >= 1) {
+                Type typeOne = service.recupererType(pokemonTypes.get(0).type_id);
+                view.filterView.typesView.typeOne.setText(typeOne.name);
+                view.filterView.typesView.typeOne.getStyleClass().clear();
+                view.filterView.typesView.typeOne.getStyleClass().add(typeOne.name);
+                view.filterView.typesView.typeOne.getStyleClass().add("pokemon-type");
+            }
+
+            if (pokemonTypes.size() >= 2) {
+                Type typeTwo = service.recupererType(pokemonTypes.get(1).type_id);
+                view.filterView.typesView.typeTwo.setText(typeTwo.name);
+                view.filterView.typesView.typeTwo.getStyleClass().clear();
+                view.filterView.typesView.typeTwo.getStyleClass().add(typeTwo.name);
+                view.filterView.typesView.typeTwo.getStyleClass().add("pokemon-type");
+            } else {
+                view.filterView.typesView.typeTwo.setText("-");
+                view.filterView.typesView.typeTwo.getStyleClass().clear();
+            }
+
         } else {
             // Clear the view if no Pokemon is provided
             view.filterView.imageView.pokemonImage.setImage(null);
