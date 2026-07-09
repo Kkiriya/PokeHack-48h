@@ -7,6 +7,8 @@ import service.PokeApiService;
 import view.screens.PokedexView;
 import model.Pokemon;
 
+import java.sql.SQLException;
+
 public class PokedexController {
     private final PokemonDAO pokemonDAO = new PokemonDAO();
     private final PokemonTypesDOA pokemonTypesDAO = new PokemonTypesDOA();
@@ -20,12 +22,26 @@ public class PokedexController {
 
         view.searchBox.btnCatch.setOnAction(e -> loadFromApi());
 
+        view.capturedListView.deleteButton.setOnAction(e -> {
+            // Get the selected Pokemon name from the list view.
+            String selectedPokemon = view.capturedListView.listView.getSelectionModel().getSelectedItem();
+
+            if (selectedPokemon == null) {
+                // TODO: Display on screen.
+                System.out.println("No Pokemon selected");
+                return;
+            }
+            deletePokemon(selectedPokemon);
+        });
+
+        // To see the preview of the pokemon before catching it.
         view.searchBox.searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             previewPokemonFromSearchBox(newValue);
         });
 
         displayPokedex(null);
     }
+
 
     public void loadFromApi() {
         // Load data with ID or name from the API and update the model
@@ -44,6 +60,29 @@ public class PokedexController {
         }
     }
 
+    /**
+     * Deletes a Pokemon from the database by its name.
+     *
+     * @param name The name of the Pokemon to delete.
+     */
+    public void deletePokemon(String name) {
+        try {
+            for (Pokemon pokemon : pokemonDAO.lister()) {
+                if (pokemon.name.equals(name)) {
+                    pokemonDAO.supprimer(pokemon.id);
+                    break;
+                }
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+        refreshList();
+    }
+
+    /**
+     * Refreshes the list view of captured Pokemon in the PokedexView.
+     * Clears the current items in the list view and repopulates it with the latest data from the database.
+     */
     public void refreshList() {
         // Refresh the list view of captured Pokemon
         try {
@@ -62,6 +101,11 @@ public class PokedexController {
         refreshList();
     }
 
+    /**
+     * Displays the details of a Pokemon in the PokedexView.
+     *
+     * @param pokemon The Pokemon object containing the details to display.
+     */
     public void displayPokedex(Pokemon pokemon) {
         // Update the view with the Pokemon data
         if (pokemon != null) {
@@ -82,7 +126,12 @@ public class PokedexController {
         }
     }
 
-    public void displayLeftPreview (Pokemon pokemon) {
+    /**
+     * Displays a preview of the Pokemon before catch on the left side of the PokedexView.
+     *
+     * @param pokemon The Pokemon object containing the details to preview.
+     */
+    public void displayLeftPreview(Pokemon pokemon) {
         view.pokemonImageFrame.pokemonImage.setImage(new Image(pokemon.sprites));
         view.statsGrid.hp.setText(String.valueOf(pokemon.hp));
         view.statsGrid.attack.setText(String.valueOf(pokemon.attack));
@@ -92,6 +141,13 @@ public class PokedexController {
         view.statsGrid.speed.setText(String.valueOf(pokemon.speed));
     }
 
+    /**
+     * Previews a Pokemon based on the text entered in the search box.
+     * If the text is empty, it does nothing. If the text can be parsed as an integer,
+     * it attempts to retrieve the Pokemon with that ID from the API and display its preview.
+     *
+     * @param text The text entered in the search box.
+     */
     private void previewPokemonFromSearchBox(String text) {
         if (text.isEmpty()) {
             return;

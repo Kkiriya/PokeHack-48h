@@ -7,19 +7,12 @@ import javafx.scene.layout.VBox;
 
 public class CapturedListView extends VBox {
     public final ListView <String> listView;
+    public final Button deleteButton;
 
     public CapturedListView() {
         listView = new ListView<>();
 
-        // TODO: Populate the ListView with captured Pokemon names.
-        listView.getItems().add("Bulbasaur");
-        listView.getItems().add("Charmander");
-        listView.getItems().add("Squirtle");
-
-        Button deleteButton = new Button("Delete");
-        deleteButton.setOnAction(e -> {
-            // TODO: Implement delete functionality
-        });
+        deleteButton = new Button("Delete");
 
         VBox listViewBox = new VBox(new Label("Captured Pokemon"), listView, deleteButton);
         listViewBox.setSpacing(0);
