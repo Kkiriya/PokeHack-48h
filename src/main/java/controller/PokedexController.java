@@ -4,8 +4,10 @@ import javafx.scene.image.Image;
 import model.*;
 import service.PokeApiService;
 import view.screens.PokedexView;
+
 import java.sql.SQLException;
 import java.util.List;
+
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.media.AudioClip;
@@ -24,12 +26,22 @@ public class PokedexController {
     public PokedexController(PokedexView view) {
         this.view = view;
 
-        view.searchBox.searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+        view.searchBox.searchField.textProperty().addListener((
+                observable,
+                oldValue,
+                newValue) -> {
             previewPokemonFromSearchBox(newValue);
 
             if (newValue.isEmpty()) {
                 displayLeftPreview(null);
             }
+        });
+
+        view.searchBox.randomButton.setOnAction(e -> {
+            // Math.Random generate between 0 and 1. +1 to avoid 0.
+            int randomId = (int) (Math.random() * 1000) + 1;
+            // Set the random ID in the search field
+            view.searchBox.searchField.setText(String.valueOf(randomId));
         });
 
         view.searchBox.catchButton.setOnAction(e -> loadFromApi());
@@ -50,7 +62,7 @@ public class PokedexController {
                                 break;
                             }
                         }
-                    }  catch (Exception e) {
+                    } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
                 }
@@ -81,8 +93,7 @@ public class PokedexController {
         try {
             int capturedCount = pokemonDAO.lister().size();
             view.capturedCountLabel.setText("Captured: " + capturedCount);
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             showErrorPopup("Not able to load Pokemon list.");
         }
     }
@@ -99,6 +110,7 @@ public class PokedexController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
     /**
      * Displays a confirmation dialog before deleting a Pokémon.
      *
@@ -162,7 +174,7 @@ public class PokedexController {
                     break;
                 }
             }
-        }  catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         refreshList();
