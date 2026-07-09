@@ -13,6 +13,7 @@ public class PokedexView {
     public final FilterView filterView;
     public final ImageView pokemonImageFrame;
     public final CapturedListView capturedListView;
+    public final StatsView statsGrid;
 
     public PokedexView() {
         // Root assembly layout
@@ -21,7 +22,7 @@ public class PokedexView {
         // Left section contains the search box, Pokemon image, and stats
         searchBox = new SearchView();
         pokemonImageFrame = new ImageView();
-        StatsView statsGrid = new StatsView();
+        statsGrid = new StatsView();
 
         leftBox = new VBox(searchBox,pokemonImageFrame, statsGrid);
         leftBox.setPadding(new Insets(10));

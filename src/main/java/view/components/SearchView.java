@@ -9,7 +9,7 @@ import javafx.scene.layout.Priority;
 
 public class SearchView extends HBox {
     public final TextField searchField;
-    public final Button btnLoad;
+    public final Button btnCatch;
     public final Label errorMessage;
 
     public SearchView() {
@@ -20,10 +20,10 @@ public class SearchView extends HBox {
         searchField.setPromptText("Enter Pokemon name or ID");
         HBox.setHgrow(searchField, Priority.ALWAYS);
 
-        btnLoad = new Button("Load");
+        btnCatch = new Button("Catch");
         errorMessage = new Label();
         errorMessage.setStyle("-fx-text-fill: red;");
 
-        getChildren().addAll(searchField, btnLoad, errorMessage);
+        getChildren().addAll(searchField, btnCatch, errorMessage);
     }
 }

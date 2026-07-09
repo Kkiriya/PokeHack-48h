@@ -18,7 +18,12 @@ public class PokedexController {
     public PokedexController(PokedexView view) {
         this.view = view;
 
-        view.searchBox.btnLoad.setOnAction(e -> loadFromApi());
+        view.searchBox.btnCatch.setOnAction(e -> loadFromApi());
+
+        view.searchBox.searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            previewPokemonFromSearchBox(newValue);
+        });
+
         displayPokedex(null);
     }
 
@@ -40,7 +45,7 @@ public class PokedexController {
     }
 
     public void refreshList() {
-        // Refresh the list view of captured Pokemon in the view
+        // Refresh the list view of captured Pokemon
         try {
             view.capturedListView.listView.getItems().clear();
             for (Pokemon pokemon : pokemonDAO.lister()) {
@@ -74,6 +79,31 @@ public class PokedexController {
             view.filterView.id = pokemon.id;
             // types
             // TODO: Implement displaying types in the view. Check how to get types from the Pokemon object or the API response.
+        }
+    }
+
+    public void displayLeftPreview (Pokemon pokemon) {
+        view.pokemonImageFrame.pokemonImage.setImage(new Image(pokemon.sprites));
+        view.statsGrid.hp.setText(String.valueOf(pokemon.hp));
+        view.statsGrid.attack.setText(String.valueOf(pokemon.attack));
+        view.statsGrid.defense.setText(String.valueOf(pokemon.defense));
+        view.statsGrid.specialAttack.setText(String.valueOf(pokemon.special_attack));
+        view.statsGrid.specialDefense.setText(String.valueOf(pokemon.special_defense));
+        view.statsGrid.speed.setText(String.valueOf(pokemon.speed));
+    }
+
+    private void previewPokemonFromSearchBox(String text) {
+        if (text.isEmpty()) {
+            return;
+        }
+
+        try {
+            int id = Integer.parseInt(text);
+            Pokemon pokemon = service.recupererPokemon(id);
+            displayLeftPreview(pokemon);
+        } catch (Exception e) {
+            // TODO: Display error on screen instead of printing to console
+            System.err.println("Error previewing Pokemon: " + e.getMessage());
         }
     }
 }
