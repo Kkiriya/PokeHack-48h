@@ -58,7 +58,7 @@ Jean-Simon Cyr (Frontend), Émile Valade (Backend)
 
 **Diagramme de relation de la base de données PokeHacks**
 
-<img width="1131" height="901" alt="PokeHack-ED drawio" src="https://github.com/user-attachments/assets/9c6b685b-0571-4ea6-a49e-574f77abe32a" />
+<img width="1131" height="938" alt="PokeHack-ED drawio" src="https://github.com/user-attachments/assets/1389db59-0031-4a51-88cc-699a699ecc50" />
 
 **Explication du diagramme en fonction de ce que retourne l'API**
 
