@@ -20,37 +20,57 @@ public class PokedexController {
     public PokedexController(PokedexView view) {
         this.view = view;
 
-        view.searchBox.btnCatch.setOnAction(e -> loadFromApi());
+        view.searchBox.catchButton.setOnAction(e -> loadFromApi());
+
+        view.capturedListView.listView.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    if (newValue == null) {
+                        return;
+                    }
+                    try {
+                        //TODO: Try with array method.
+                        for (Pokemon pokemon : pokemonDAO.lister()) {
+                            if (pokemon.name.equals(newValue)) {
+                                displayCardPokedex(pokemon);
+                                break;
+                            }
+                        }
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+        );
 
         view.capturedListView.deleteButton.setOnAction(e -> {
             // Get the selected Pokemon name from the list view.
             String selectedPokemon = view.capturedListView.listView.getSelectionModel().getSelectedItem();
-
             if (selectedPokemon == null) {
                 // TODO: Display on screen.
                 System.out.println("No Pokemon selected");
                 return;
             }
             deletePokemon(selectedPokemon);
+            displayCardPokedex(null);
         });
 
         // To see the preview of the pokemon before catching it.
         view.searchBox.searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             previewPokemonFromSearchBox(newValue);
+            if(newValue == null || newValue.isEmpty()) {
+                displayLeftPreview(null);
+            }
         });
-
-        displayPokedex(null);
     }
 
 
-    public void loadFromApi() {
+    private void loadFromApi() {
         // Load data with ID or name from the API and update the model
         int id = (Integer.parseInt(view.searchBox.searchField.getText()));
 
         System.out.println("Loading Pokemon with ID: " + id);
         try {
             Pokemon pokemon = service.recupererPokemon(id);
-            displayPokedex(pokemon);
+            displayCardPokedex(pokemon);
             pokemonDAO.sauvegarder(pokemon);
             refreshList();
         } catch (Exception e) {
@@ -65,11 +85,13 @@ public class PokedexController {
      *
      * @param name The name of the Pokemon to delete.
      */
-    public void deletePokemon(String name) {
+    private void deletePokemon(String name) {
         try {
+            //TODO: Try with array method.
             for (Pokemon pokemon : pokemonDAO.lister()) {
                 if (pokemon.name.equals(name)) {
                     pokemonDAO.supprimer(pokemon.id);
+                    displayCardPokedex(null); // Clear
                     break;
                 }
             }
@@ -83,7 +105,7 @@ public class PokedexController {
      * Refreshes the list view of captured Pokemon in the PokedexView.
      * Clears the current items in the list view and repopulates it with the latest data from the database.
      */
-    public void refreshList() {
+    private void refreshList() {
         // Refresh the list view of captured Pokemon
         try {
             view.capturedListView.listView.getItems().clear();
@@ -106,7 +128,7 @@ public class PokedexController {
      *
      * @param pokemon The Pokemon object containing the details to display.
      */
-    public void displayPokedex(Pokemon pokemon) {
+    private void displayCardPokedex(Pokemon pokemon) {
         // Update the view with the Pokemon data
         if (pokemon != null) {
             // sprite
@@ -123,6 +145,16 @@ public class PokedexController {
             view.filterView.id = pokemon.id;
             // types
             // TODO: Implement displaying types in the view. Check how to get types from the Pokemon object or the API response.
+        } else {
+            // Clear the view if no Pokemon is provided
+            view.filterView.imageView.pokemonImage.setImage(null);
+            view.filterView.statsView.hp.setText("");
+            view.filterView.statsView.attack.setText("");
+            view.filterView.statsView.defense.setText("");
+            view.filterView.statsView.specialAttack.setText("");
+            view.filterView.statsView.specialDefense.setText("");
+            view.filterView.statsView.speed.setText("");
+            view.filterView.id = 0;
         }
     }
 
@@ -131,14 +163,25 @@ public class PokedexController {
      *
      * @param pokemon The Pokemon object containing the details to preview.
      */
-    public void displayLeftPreview(Pokemon pokemon) {
-        view.pokemonImageFrame.pokemonImage.setImage(new Image(pokemon.sprites));
-        view.statsGrid.hp.setText(String.valueOf(pokemon.hp));
-        view.statsGrid.attack.setText(String.valueOf(pokemon.attack));
-        view.statsGrid.defense.setText(String.valueOf(pokemon.defense));
-        view.statsGrid.specialAttack.setText(String.valueOf(pokemon.special_attack));
-        view.statsGrid.specialDefense.setText(String.valueOf(pokemon.special_defense));
-        view.statsGrid.speed.setText(String.valueOf(pokemon.speed));
+    private void displayLeftPreview(Pokemon pokemon) {
+        if (pokemon != null) {
+            view.pokemonImageFrame.pokemonImage.setImage(new Image(pokemon.sprites));
+            view.statsGrid.hp.setText(String.valueOf(pokemon.hp));
+            view.statsGrid.attack.setText(String.valueOf(pokemon.attack));
+            view.statsGrid.defense.setText(String.valueOf(pokemon.defense));
+            view.statsGrid.specialAttack.setText(String.valueOf(pokemon.special_attack));
+            view.statsGrid.specialDefense.setText(String.valueOf(pokemon.special_defense));
+            view.statsGrid.speed.setText(String.valueOf(pokemon.speed));
+        } else {
+            // Clear the preview if no Pokemon is provided
+            view.pokemonImageFrame.pokemonImage.setImage(null);
+            view.statsGrid.hp.setText("");
+            view.statsGrid.attack.setText("");
+            view.statsGrid.defense.setText("");
+            view.statsGrid.specialAttack.setText("");
+            view.statsGrid.specialDefense.setText("");
+            view.statsGrid.speed.setText("");
+        }
     }
 
     /**
