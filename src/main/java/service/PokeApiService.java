@@ -21,7 +21,7 @@ public class PokeApiService {
                 return stat.get("base_stat").asInt();
             }
         }
-        throw new RuntimeException("Stat no found " + statName);
+        throw new RuntimeException("Stat not found " + statName);
     }
 
     // helper method to extract the id out of a URL, works for all major tables
@@ -55,8 +55,8 @@ public class PokeApiService {
         p.hp = getStats(pokemon, "hp");
         p.attack = getStats(pokemon, "attack");
         p.defense = getStats(pokemon, "defense");
-        p.special_attack = getStats(pokemon, "special_attack");
-        p.special_defense = getStats(pokemon, "special_defense");
+        p.special_attack = getStats(pokemon, "special-attack");
+        p.special_defense = getStats(pokemon, "special-defense");
         p.speed = getStats(pokemon, "speed");
         p.weight = pokemon.get("weight").asInt() / 10.0;
         return p;
