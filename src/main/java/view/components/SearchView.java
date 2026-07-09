@@ -2,15 +2,15 @@ package view.components;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 
 public class SearchView extends HBox {
     public final TextField searchField;
     public final Button catchButton;
-    public final Label errorMessage;
+    public final Button randomButton;
 
     public SearchView() {
         setSpacing(8);
@@ -20,10 +20,13 @@ public class SearchView extends HBox {
         searchField.setPromptText("Enter Pokemon name or ID");
         HBox.setHgrow(searchField, Priority.ALWAYS);
 
-        catchButton = new Button("Catch");
-        errorMessage = new Label();
-        errorMessage.setStyle("-fx-text-fill: red;");
+        randomButton = new Button("Random Id");
 
-        getChildren().addAll(searchField, catchButton, errorMessage);
+        VBox searchBox = new VBox(searchField,randomButton);
+        searchBox.setPadding(new Insets(0, 0, 0, 10));
+
+        catchButton = new Button("Catch");
+
+        getChildren().addAll(searchBox, catchButton);
     }
 }
