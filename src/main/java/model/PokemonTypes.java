@@ -1,14 +1,13 @@
 package model;
 
 public class PokemonTypes {
-    public int id;
-    public int pokemonId;
-    public int typeId;
+    public int pokemon_id;
+    public int type_id;
 
     public PokemonTypes() {}
 
     @Override
     public String toString() {
-        return String.format("%d. %d-%d", id, pokemonId, typeId);
+        return String.format("%d-%d", pokemon_id, type_id);
     }
 }

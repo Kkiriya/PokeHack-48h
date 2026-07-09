@@ -14,23 +14,17 @@ public class TypeDOA {
     public void sauvegarder(Type t) throws SQLException {
         String sql =
                 "INSERT INTO type "
-                + "(id, name, double_damage_to, half_damage_from, no_damage_from, no_damage_to, move_damage_class, " +
-                        "sprites) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?) "
+                + "(id, name, sprites) "
+                + "VALUES (?, ?, ?) "
                 + "ON CONFLICT (id) DO UPDATE SET "
-                + "name=EXCLUDED.name ";
+                + "name=EXCLUDED.name, sprites=COALESCE(EXCLUDED.sprites, type.sprites) ";
 
         try (Connection co = Connexion.ouvrir();
              PreparedStatement ps = co.prepareStatement(sql)) {
 
             ps.setInt(1, t.id);
             ps.setString(2, t.name);
-            ps.setString(3, t.double_damage_to);
-            ps.setString(4, t.half_damage_from);
-            ps.setString(5, t.no_damage_from);
-            ps.setString(6, t.no_damage_to);
-            ps.setString(7, t.move_damage_class);
-            ps.setString(8, t.sprites);
+            ps.setString(3, t.sprites);
             ps.executeUpdate();
         }
     }
@@ -47,11 +41,6 @@ public class TypeDOA {
                 Type t = new Type();
                 t.id = rs.getInt("id");
                 t.name = rs.getString("name");
-                t.double_damage_to = rs.getString("double_damage_to");
-                t.half_damage_from = rs.getString("half_damage_from");
-                t.no_damage_from = rs.getString("no_damage_from");
-                t.no_damage_to = rs.getString("no_damage_to");
-                t.move_damage_class = rs.getString("move_damage_class");
                 t.sprites = rs.getString("sprites");
                 all.add(t);
             }
