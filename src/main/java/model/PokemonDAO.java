@@ -24,19 +24,19 @@ public class PokemonDAO {
              PreparedStatement ps = co.prepareStatement(sql)) {
 
             ps.setInt(1, p.id);
-            ps.setInt(3, p.baseExperience);
-            ps.setString(4, p.cries);
-            ps.setDouble(5, p.height);
-            ps.setString(6, p.name);
-            ps.setString(7, p.species);
-            ps.setString(8, p.sprites);
-            ps.setInt(9, p.hp);
-            ps.setInt(10, p.attack);
-            ps.setInt(11, p.defense);
-            ps.setInt(12, p.special_attack);
-            ps.setInt(13, p.special_defense);
-            ps.setInt(14, p.special_defense);
-            ps.setDouble(15, p.weight);
+            ps.setInt(2, p.baseExperience);
+            ps.setString(3, p.cries);
+            ps.setDouble(4, p.height);
+            ps.setString(5, p.name);
+            ps.setString(6, p.species);
+            ps.setString(7, p.sprites);
+            ps.setInt(8, p.hp);
+            ps.setInt(9, p.attack);
+            ps.setInt(10, p.defense);
+            ps.setInt(11, p.special_attack);
+            ps.setInt(12, p.special_defense);
+            ps.setInt(13, p.speed);
+            ps.setDouble(14, p.weight);
             ps.executeUpdate();
         }
     }
