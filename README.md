@@ -77,7 +77,7 @@ mvn javafx:run
 
 ## Liste des bonus implémentés
 
-- [ ] Compteur en bas
+- [X] Compteur en bas
 - [ ] Focus automatique
 - [ ] Cri du Pokémon
 - [ ] Bouton **Random**
