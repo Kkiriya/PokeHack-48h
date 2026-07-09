@@ -4,11 +4,10 @@ import javafx.scene.image.Image;
 import model.*;
 import service.PokeApiService;
 import view.screens.PokedexView;
-
 import java.sql.SQLException;
 import java.util.List;
-
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 public class PokedexController {
     // Data Base
@@ -53,10 +52,16 @@ public class PokedexController {
         view.capturedListView.deleteButton.setOnAction(e -> {
             // Get the selected Pokemon name from the list view.
             String selectedPokemon = view.capturedListView.listView.getSelectionModel().getSelectedItem();
+
             if (selectedPokemon == null) {
                 showErrorPopup("Select a Pokemon first !");
                 return;
             }
+
+            if (!confirmDeletePopUp(selectedPokemon)) {
+                return;
+            }
+
             deletePokemon(selectedPokemon);
             try {
                 displayCardPokedex(null, null);
@@ -74,6 +79,11 @@ public class PokedexController {
         });
     }
 
+    /**
+     * Displays an error popup with the specified message.
+     *
+     * @param message The error message to display.
+     */
     private void showErrorPopup(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -81,7 +91,20 @@ public class PokedexController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    /**
+     * Displays a confirmation dialog before deleting a Pokemon.
+     *
+     * @param pokemonName The name of the Pokemon to delete.
+     * @return true if the user confirms the deletion, false otherwise.
+     */
+    private boolean confirmDeletePopUp(String pokemonName) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm delete");
+        alert.setHeaderText(null);
+        alert.setContentText("Delete " + pokemonName + "?");
 
+        return alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK;
+    }
 
     private void loadFromApi() {
         int id;
