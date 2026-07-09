@@ -4,10 +4,13 @@ import javafx.scene.image.Image;
 import model.*;
 import service.PokeApiService;
 import view.screens.PokedexView;
+
 import java.sql.SQLException;
 import java.util.List;
+
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.media.AudioClip;
 
 public class PokedexController {
     // Data Base
@@ -22,6 +25,24 @@ public class PokedexController {
     // Constructor
     public PokedexController(PokedexView view) {
         this.view = view;
+
+        view.searchBox.searchField.textProperty().addListener((
+                observable,
+                oldValue,
+                newValue) -> {
+            previewPokemonFromSearchBox(newValue);
+
+            if (newValue.isEmpty()) {
+                displayLeftPreview(null);
+            }
+        });
+
+        view.searchBox.randomButton.setOnAction(e -> {
+            // Math.Random generate between 0 and 1. +1 to avoid 0.
+            int randomId = (int) (Math.random() * 1000) + 1;
+            // Set the random ID in the search field
+            view.searchBox.searchField.setText(String.valueOf(randomId));
+        });
 
         view.searchBox.catchButton.setOnAction(e -> loadFromApi());
 
@@ -41,8 +62,6 @@ public class PokedexController {
                                 break;
                             }
                         }
-                    } catch (SQLException ex) {
-                        throw new RuntimeException(ex);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -70,13 +89,13 @@ public class PokedexController {
             }
         });
 
-        // To see the preview of the pokemon before catching it.
-        view.searchBox.searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            previewPokemonFromSearchBox(newValue);
-            if (newValue == null || newValue.isEmpty()) {
-                displayLeftPreview(null);
-            }
-        });
+        // Captured count label update
+        try {
+            int capturedCount = pokemonDAO.lister().size();
+            view.capturedCountLabel.setText("Captured: " + capturedCount);
+        } catch (SQLException ex) {
+            showErrorPopup("Not able to load Pokemon list.");
+        }
     }
 
     /**
@@ -91,10 +110,11 @@ public class PokedexController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
     /**
-     * Displays a confirmation dialog before deleting a Pokemon.
+     * Displays a confirmation dialog before deleting a Pokémon.
      *
-     * @param pokemonName The name of the Pokemon to delete.
+     * @param pokemonName The name of the Pokémon to delete.
      * @return true if the user confirms the deletion, false otherwise.
      */
     private boolean confirmDeletePopUp(String pokemonName) {
@@ -157,9 +177,9 @@ public class PokedexController {
     }
 
     /**
-     * Deletes a Pokemon from the database by its name.
+     * Deletes a Pokémon from the database by its name.
      *
-     * @param name The name of the Pokemon to delete.
+     * @param name The name of the Pokémon to delete.
      */
     private void deletePokemon(String name) {
         // TODO: Add confirmation dialog before deletion
@@ -172,8 +192,6 @@ public class PokedexController {
                     break;
                 }
             }
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -181,7 +199,7 @@ public class PokedexController {
     }
 
     /**
-     * Refreshes the list view of captured Pokemon in the PokedexView.
+     * Refreshes the list view of captured Pokémon in the PokedexView.
      * Clears the current items in the list view and repopulates it with the latest data from the database.
      */
     private void refreshList() {
@@ -196,6 +214,16 @@ public class PokedexController {
             // TODO: Display error on screen instead of printing to console
             System.err.println("Error loading Pokemon: " + e.getMessage());
         }
+        refreshCapturedCount();
+    }
+
+    private void refreshCapturedCount() {
+        try {
+            int capturedCount = pokemonDAO.lister().size();
+            view.capturedCountLabel.setText("Captured: " + capturedCount);
+        } catch (SQLException ex) {
+            showErrorPopup("Not able to load Pokemon list.");
+        }
     }
 
     public void start() {
@@ -203,9 +231,9 @@ public class PokedexController {
     }
 
     /**
-     * Displays the details of a Pokemon in the PokedexView.
+     * Displays the details of a Pokémon in the PokedexView.
      *
-     * @param pokemon The Pokemon object containing the details to display.
+     * @param pokemon The Pokémon object containing the details to display.
      */
     private void displayCardPokedex(Pokemon pokemon, List<PokemonTypes> pokemonTypes) throws Exception {
         // Update the view with the Pokemon data
@@ -224,13 +252,18 @@ public class PokedexController {
             view.filterView.id = pokemon.id;
             // types
             // TODO: ----
-            if (pokemonTypes.size() >= 1) {
-                Type typeOne = service.recupererType(pokemonTypes.get(0).type_id);
+            if (!pokemonTypes.isEmpty()) {
+                Type typeOne = service.recupererType(pokemonTypes.getFirst().type_id);
                 view.filterView.typesView.typeOne.setText(typeOne.name);
                 view.filterView.typesView.typeOne.getStyleClass().clear();
                 view.filterView.typesView.typeOne.getStyleClass().add(typeOne.name);
                 view.filterView.typesView.typeOne.getStyleClass().add("pokemon-type");
             }
+            // Click event to play his cry when clicked
+            view.filterView.imageView.pokemonImage.setOnMouseClicked(e -> {
+                //playPokemonCry(pokemon);
+                System.out.println("Cry URL: " + pokemon.cries);
+            });
 
             if (pokemonTypes.size() >= 2) {
                 Type typeTwo = service.recupererType(pokemonTypes.get(1).type_id);
@@ -257,9 +290,9 @@ public class PokedexController {
     }
 
     /**
-     * Displays a preview of the Pokemon before catch on the left side of the PokedexView.
+     * Displays a preview of the Pokémon before catch on the left side of the PokedexView.
      *
-     * @param pokemon The Pokemon object containing the details to preview.
+     * @param pokemon The Pokémon object containing the details to preview.
      */
     private void displayLeftPreview(Pokemon pokemon) {
         if (pokemon != null) {
@@ -270,6 +303,13 @@ public class PokedexController {
             view.statsGrid.specialAttack.setText(String.valueOf(pokemon.special_attack));
             view.statsGrid.specialDefense.setText(String.valueOf(pokemon.special_defense));
             view.statsGrid.speed.setText(String.valueOf(pokemon.speed));
+
+            // Click event for the preview Pokemon image in the left box
+            view.pokemonImageFrame.pokemonImage.setOnMouseClicked(e -> {
+                //playPokemonCry(pokemon);
+                System.out.println("Cry URL: " + pokemon.cries);
+            });
+
         } else {
             // Clear the preview if no Pokemon is provided
             view.pokemonImageFrame.pokemonImage.setImage(null);
@@ -283,9 +323,9 @@ public class PokedexController {
     }
 
     /**
-     * Previews a Pokemon based on the text entered in the search box.
+     * Previews a Pokémon based on the text entered in the search box.
      * If the text is empty, it does nothing. If the text can be parsed as an integer,
-     * it attempts to retrieve the Pokemon with that ID from the API and display its preview.
+     * it attempts to retrieve the Pokémon with that ID from the API and display its preview.
      *
      * @param text The text entered in the search box.
      */
@@ -308,5 +348,10 @@ public class PokedexController {
             // TODO: Display error on screen instead of printing to console
             System.err.println("Error previewing Pokemon: " + e.getMessage());
         }
+    }
+
+    private void playPokemonCry(Pokemon pokemon) {
+        AudioClip cry = new AudioClip(pokemon.cries);
+        cry.play();
     }
 }
