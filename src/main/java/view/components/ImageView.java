@@ -12,6 +12,7 @@ public class ImageView extends StackPane {
         pokemonImage.setPreserveRatio(true);
         pokemonImage.setFitWidth(240);
         pokemonImage.setFitHeight(240);
+        pokemonImage.setSmooth(true);
 
         // TODO - Delete this part when you implement the API call to get the image URL
         Image sprite = new Image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png");
@@ -22,6 +23,10 @@ public class ImageView extends StackPane {
         pokemonImageFrame.setPrefSize(240, 240);
         pokemonImageFrame.setAlignment(Pos.CENTER);
         pokemonImageFrame.setStyle("-fx-border-color: black; -fx-border-width: 1; -fx-background-color: white;");
+
+        setMinSize(240, 240);
+        setPrefSize(240, 240);
+        setStyle("-fx-border-color: black; -fx-border-width: 1; -fx-background-color: white;");
 
         getChildren().add(pokemonImageFrame);
     }
