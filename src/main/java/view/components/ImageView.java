@@ -14,11 +14,6 @@ public class ImageView extends StackPane {
         pokemonImage.setFitHeight(240);
         pokemonImage.setSmooth(true);
 
-        // TODO - Delete this part when you implement the API call to get the image URL
-        Image sprite = new Image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png");
-        // That's the part that will be in controller
-        pokemonImage.setImage(sprite);
-
         StackPane pokemonImageFrame = new StackPane(pokemonImage);
         pokemonImageFrame.setPrefSize(240, 240);
         pokemonImageFrame.setAlignment(Pos.CENTER);
