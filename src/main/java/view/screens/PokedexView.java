@@ -2,6 +2,7 @@ package view.screens;
 
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import view.components.*;
 
@@ -14,6 +15,7 @@ public class PokedexView {
     public final ImageView pokemonImageFrame;
     public final CapturedListView capturedListView;
     public final StatsView statsGrid;
+    public final Label capturedCountLabel;
 
     public PokedexView() {
         // Root assembly layout
@@ -36,7 +38,10 @@ public class PokedexView {
         filterView = new FilterView();
 
         EvolutionsView evolutionsView = new EvolutionsView();
-        VBox centerBox = new VBox(capturedListView, filterView,evolutionsView);
+
+        capturedCountLabel = new Label("Captured: 0");
+
+        VBox centerBox = new VBox(capturedListView, filterView,evolutionsView,capturedCountLabel);
         centerBox.setSpacing(10);
 
         root.setCenter(centerBox);
