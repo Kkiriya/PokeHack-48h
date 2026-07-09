@@ -127,18 +127,37 @@ public class PokedexController {
     }
 
     private void loadFromApi() {
-        int id;
-        try {
-            id = Integer.parseInt(view.searchBox.searchField.getText());
-        } catch (NumberFormatException e) {
-            showErrorPopup("Invalid ID. Please enter a valid integer.");
+        String idOrName = view.searchBox.searchField.getText().strip();
+
+        if (idOrName.isBlank()){
+            showErrorPopup("Invalid Name or ID, please enter valid Name or ID");
             return;
         }
 
-        System.out.println("Loading Pokemon with ID: " + id);
+        Pokemon pokemon;
+
+        if (idOrName.matches("^[0-9]+$")) {
+            try {
+                System.out.println("Loading Pokemon with ID " + idOrName);
+                // Retrieve Pokemon data from the API
+                pokemon = service.recupererPokemon(Integer.parseInt(idOrName));
+            } catch (Exception e) {
+                showErrorPopup("Invalid ID. Please enter a valid integer.");
+                return;
+            }
+        } else {
+            try {
+                System.out.println("Loading Pokemon with Name: " + idOrName);
+                // Retrieve Pokemon data from the API
+                pokemon = service.recupererPokemonParNom(idOrName);
+            } catch (Exception e) {
+                showErrorPopup("Invalid Name. Please enter a valid Name.");
+                return;
+            }
+        }
+
         try {
-            // Retrieve Pokemon data from the API
-            Pokemon pokemon = service.recupererPokemon(id);
+            // retrieves pokemonTypes from API
             List<PokemonTypes> pokemonTypes = service.recupererPokemonTypes(pokemon.id);
 
             // Save the Pokemon data to the database
@@ -150,7 +169,6 @@ public class PokedexController {
 
             displayCardPokedex(pokemon, pokemonTypes);
             refreshList();
-
         } catch (Exception e) {
             // TODO: Display error on screen instead of printing to console
             // Handle exceptions (e.g., show an error message in the view)
@@ -312,15 +330,21 @@ public class PokedexController {
      * @param text The text entered in the search box.
      */
     private void previewPokemonFromSearchBox(String text) {
-        if (text.isEmpty()) {
+        if (text.isBlank()) {
             return;
         }
 
+        Pokemon pokemon;
+
         try {
-            int id = Integer.parseInt(text);
-            Pokemon pokemon = service.recupererPokemon(id);
+            if (text.strip().matches("^[0-9]+$")) {
+                pokemon = service.recupererPokemon(Integer.parseInt(text));
+            } else {
+                pokemon = service.recupererPokemonParNom(text);
+            }
             displayLeftPreview(pokemon);
         } catch (Exception e) {
+            displayLeftPreview(null);
             // TODO: Display error on screen instead of printing to console
             System.err.println("Error previewing Pokemon: " + e.getMessage());
         }
