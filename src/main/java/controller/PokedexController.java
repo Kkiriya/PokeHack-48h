@@ -2,12 +2,14 @@ package controller;
 
 import javafx.scene.image.Image;
 import model.PokemonDAO;
+import model.PokemonTypesDOA;
 import service.PokeApiService;
 import view.screens.PokedexView;
 import model.Pokemon;
 
 public class PokedexController {
-    private final PokemonDAO dao = new PokemonDAO();
+    private final PokemonDAO pokemonDAO = new PokemonDAO();
+    private final PokemonTypesDOA pokemonTypesDAO = new PokemonTypesDOA();
     private final PokeApiService service = new PokeApiService();
     private final PokedexView view;
 
@@ -17,6 +19,7 @@ public class PokedexController {
         this.view = view;
 
         view.searchBox.btnLoad.setOnAction(e -> loadFromApi());
+        displayPokedex(null);
     }
 
     public void loadFromApi() {
@@ -26,7 +29,8 @@ public class PokedexController {
         System.out.println("Loading Pokemon with ID: " + id);
         try {
             Pokemon pokemon = service.recupererPokemon(id);
-            dao.sauvegarder(pokemon);
+            displayPokedex(pokemon);
+            pokemonDAO.sauvegarder(pokemon);
             refreshList();
         } catch (Exception e) {
             // TODO: Display error on screen instead of printing to console
@@ -39,7 +43,7 @@ public class PokedexController {
         // Refresh the list view of captured Pokemon in the view
         try {
             view.capturedListView.listView.getItems().clear();
-            for (Pokemon pokemon : dao.lister()) {
+            for (Pokemon pokemon : pokemonDAO.lister()) {
                 System.out.println("Pokemon in DAO: " + pokemon.name);
                 view.capturedListView.listView.getItems().add(pokemon.name);
             }
@@ -56,8 +60,20 @@ public class PokedexController {
     public void displayPokedex(Pokemon pokemon) {
         // Update the view with the Pokemon data
         if (pokemon != null) {
+            // sprite
             Image sprite = new Image(pokemon.sprites);
-            view.pokemonImageFrame.pokemonImage.setImage(sprite);
+            view.filterView.imageView.pokemonImage.setImage(sprite);
+            // stats
+            view.filterView.statsView.hp.setText(String.valueOf(pokemon.hp));
+            view.filterView.statsView.attack.setText(String.valueOf(pokemon.attack));
+            view.filterView.statsView.defense.setText(String.valueOf(pokemon.defense));
+            view.filterView.statsView.specialAttack.setText(String.valueOf(pokemon.special_attack));
+            view.filterView.statsView.specialDefense.setText(String.valueOf(pokemon.special_defense));
+            view.filterView.statsView.speed.setText(String.valueOf(pokemon.speed));
+            // id
+            view.filterView.id = pokemon.id;
+            // types
+            // TODO: Implement displaying types in the view. Check how to get types from the Pokemon object or the API response.
         }
     }
 }

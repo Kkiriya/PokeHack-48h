@@ -1,11 +1,15 @@
 package view.screens;
 
 import javafx.geometry.Insets;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import view.components.CardInfoButtons;
 import view.components.ImageView;
 import view.components.StatsView;
 import view.components.TypesView;
+
+import static java.util.Arrays.setAll;
+
 
 /**
  * FilterView is a JavaFX HBox that contains buttons to switch between different views (ImagePanel, StatsView, TypesView).
@@ -13,10 +17,16 @@ import view.components.TypesView;
  */
 public class FilterView extends HBox {
     public final ImageView imageView;
+    public final StatsView statsView;
+    public TypesView typesView;
+    public int id;
 
     public FilterView() {
         CardInfoButtons cardInfoButtons = new CardInfoButtons();
         imageView = new ImageView();
+        statsView = new StatsView();
+        typesView = new TypesView();
+
         HBox contentPane = new HBox();
 
         contentPane.setSpacing(10);
@@ -31,13 +41,16 @@ public class FilterView extends HBox {
         });
 
         cardInfoButtons.statsButton.setOnAction(e -> {
-            StatsView statsView = new StatsView();
+
             contentPane.getChildren().setAll(statsView);
         });
 
         cardInfoButtons.typesButton.setOnAction(e -> {
-            TypesView typesView = new TypesView();
             contentPane.getChildren().setAll(typesView);
+        });
+
+        cardInfoButtons.idButton.setOnAction(e -> {
+            contentPane.getChildren().setAll(new Label("ID: " + id));
         });
 
         setSpacing(10);

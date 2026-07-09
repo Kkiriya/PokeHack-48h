@@ -7,7 +7,7 @@ public class CardInfoButtons extends VBox {
     public Button statsButton;
     public Button typesButton;
     public Button spritesButton;
-    Button idButton;
+    public Button idButton;
 
     public CardInfoButtons() {
         statsButton = new Button("Stats");
