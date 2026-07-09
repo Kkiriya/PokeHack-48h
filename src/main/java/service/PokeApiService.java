@@ -62,8 +62,8 @@ public class PokeApiService {
         return p;
     }
 
-    public Pokemon recupererPokemonParNom(String nom) throws Exception {
-        HttpRequest req = HttpRequest.newBuilder(URI.create(URL + "pokemon/nom")).GET().build();
+    public Pokemon recupererPokemonParNom(String name) throws Exception {
+        HttpRequest req = HttpRequest.newBuilder(URI.create(URL + "pokemon/" + name)).GET().build();
         HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
 
         if (res.statusCode() != 200) {
