@@ -8,6 +8,8 @@ import view.screens.PokedexView;
 import java.sql.SQLException;
 import java.util.List;
 
+import javafx.scene.control.Alert;
+
 public class PokedexController {
     // Data Base
     private final PokemonDAO pokemonDAO = new PokemonDAO();
@@ -36,7 +38,7 @@ public class PokedexController {
 
                                 List<PokemonTypes> pokemonTypes = service.recupererPokemonTypes(pokemon.id);
 
-                                displayCardPokedex(pokemon ,pokemonTypes);
+                                displayCardPokedex(pokemon, pokemonTypes);
                                 break;
                             }
                         }
@@ -52,8 +54,7 @@ public class PokedexController {
             // Get the selected Pokemon name from the list view.
             String selectedPokemon = view.capturedListView.listView.getSelectionModel().getSelectedItem();
             if (selectedPokemon == null) {
-                // TODO: Display on screen.
-                System.out.println("No Pokemon selected");
+                showErrorPopup("Select a Pokemon first !");
                 return;
             }
             deletePokemon(selectedPokemon);
@@ -73,10 +74,23 @@ public class PokedexController {
         });
     }
 
+    private void showErrorPopup(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
 
     private void loadFromApi() {
-        // Load data with ID or name from the API and update the model
-        int id = (Integer.parseInt(view.searchBox.searchField.getText()));
+        int id;
+        try {
+            id = Integer.parseInt(view.searchBox.searchField.getText());
+        } catch (NumberFormatException e) {
+            showErrorPopup("Invalid ID. Please enter a valid integer.");
+            return;
+        }
 
         System.out.println("Loading Pokemon with ID: " + id);
         try {
@@ -107,6 +121,7 @@ public class PokedexController {
      * @param name The name of the Pokemon to delete.
      */
     private void deletePokemon(String name) {
+        // TODO: Add confirmation dialog before deletion
         try {
             //TODO: Try with array method.
             for (Pokemon pokemon : pokemonDAO.lister()) {
