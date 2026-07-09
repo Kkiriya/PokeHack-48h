@@ -1,7 +1,6 @@
 package view.screens;
 
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.layout.*;
 import view.components.*;
@@ -10,15 +9,18 @@ public class PokedexView {
 
     private final BorderPane root;
     public final VBox leftBox;
-
+    public final SearchView searchBox;
+    public final FilterView filterView;
+    public final ImageView pokemonImageFrame;
+    public final CapturedListView capturedListView;
 
     public PokedexView() {
         // Root assembly layout
         root = new BorderPane();
 
         // Left section contains the search box, Pokemon image, and stats
-        SearchView searchBox = new SearchView();
-        ImageView pokemonImageFrame = new ImageView();
+        searchBox = new SearchView();
+        pokemonImageFrame = new ImageView();
         StatsView statsGrid = new StatsView();
 
         leftBox = new VBox(searchBox,pokemonImageFrame, statsGrid);
@@ -29,8 +31,9 @@ public class PokedexView {
         BorderPane.setMargin(leftBox, new Insets(10, 0, 0, 50)); // Adjust the left margin to move the leftBox down and to the right
 
         // Center
-        CapturedListView capturedListView = new CapturedListView();
-        FilterView filterView = new FilterView();
+        capturedListView = new CapturedListView();
+        filterView = new FilterView();
+
         EvolutionsView evolutionsView = new EvolutionsView();
         VBox centerBox = new VBox(capturedListView, filterView,evolutionsView);
         centerBox.setSpacing(10);

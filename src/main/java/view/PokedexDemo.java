@@ -14,6 +14,9 @@ public class PokedexDemo extends Application {
         Scene scene = new Scene(view.getRoot(), 900, 600);
         stage.setTitle("Pokedex Demo");
         stage.setScene(scene);
+        scene.getStylesheets().add(
+                getClass().getResource("/styles/style.css").toExternalForm()
+        );
         stage.show();
     }
 
