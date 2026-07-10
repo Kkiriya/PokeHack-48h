@@ -13,25 +13,32 @@ public class MainFx extends Application {
 
     @Override
     public void start(Stage stage) {
+        // Create the main view. Its root node contains the whole UI.
         PokedexView pokedexView = new PokedexView();
+        // Wrap the root in a Group so the whole UI scales as one visual block.
         Group appRoot = new Group(pokedexView.getRoot());
+        // Wrap the Group in a StackPane to center it and apply background styling.
         StackPane scaledRoot = new StackPane(appRoot);
         scaledRoot.getStyleClass().add("app-background");
 
         PokedexController controller = new PokedexController(pokedexView);
         controller.start();
 
+        // Create the scene with the scaled root and set the base dimensions
         Scene scene = new Scene(scaledRoot, BASE_WIDTH, BASE_HEIGHT);
         scene.getStylesheets().add(
                 getClass().getResource("/styles/style.css").toExternalForm()
         );
 
+        // Scale the UI based on the current scene size.
+        // Bindings.min keeps the aspect ratio and avoids stretching.
         appRoot.scaleXProperty().bind(
                 Bindings.min(
                         scene.widthProperty().divide(BASE_WIDTH),
                         scene.heightProperty().divide(BASE_HEIGHT)
                 )
         );
+        // Use the same scale for Y so the UI keeps its proportions.
         appRoot.scaleYProperty().bind(appRoot.scaleXProperty());
 
         stage.setTitle("Pokedex");
