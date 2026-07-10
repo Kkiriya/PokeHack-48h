@@ -5,6 +5,173 @@
     -fx-background-radius: 8;
 }
 
+.delete-button {
+    -fx-background-color: red;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 5 10;
+    -fx-background-radius: 8;
+}
+
+.stats-label {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.pokemon-image-frame {
+    -fx-background-color: #e9e9e9;
+    -fx-background-radius: 12;
+    -fx-border-color: #d7d7d7;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-padding: 12;
+    -fx-min-width: 240;
+    -fx-min-height: 240;
+    -fx-pref-width: 240;
+    -fx-pref-height: 240;
+}
+
+.pokemon-image-frame .pokemon-image {
+    -fx-smooth: true;
+}
+
+.stats-grid {
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+    -fx-background-color: #b8b7b7;
+    -fx-background-radius: 12;
+    -fx-border-color: #d7d7d7;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-padding: 12;
+    -fx-pref-height: 260;
+    -fx-min-width: 240;
+    -fx-min-height: 240;
+    -fx-pref-width: 240;
+}
+
+.stats-value {
+    -fx-font-size: 20px;
+    -fx-text-fill: #0877b8;
+}
+
+.pokemon-name-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.captured-count-label {
+    -fx-font-size: 20px;
+    -fx-text-fill: #555555;
+}
+
+
+.wild-label {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFCB05;
+    -fx-alignment: center;
+}
+
+.filter-view {
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 12;
+    -fx-border-color: #d7d7d7;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-padding: 12;
+    -fx-max-height: 300;
+}
+
+.wild-pokemon-box {
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 12;
+    -fx-border-color: #d7d7d7;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-padding: 12;
+}
+
+.center-box {
+    -fx-alignment: center;
+    -fx-padding: 25;
+}
+
+.captured-list-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-padding: 10 0 10 0;
+}
+
+.evolution-box {
+    -fx-background-color: #606060;
+    -fx-alignment: center;
+}
+
+.evolution-image {
+    -fx-background-color: #606060;
+    -fx-border-color: white;
+    -fx-background-radius: 90;
+    -fx-border-width: 2;
+    -fx-border-radius: 90;
+
+    -fx-min-width: 100;
+    -fx-min-height: 100;
+    -fx-pref-width: 100;
+    -fx-pref-height: 100;
+    -fx-max-width: 100;
+    -fx-max-height: 100;
+
+    -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, #191919, 1.5, 1.0, 0, 1);
+}
+
+.evolution-name {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-alignment: center;
+}
+
+.evolutions-row{
+    -fx-spacing: 20;
+    -fx-alignment: center;
+    -fx-min-width: 180;
+    -fx-min-height: 180;
+    -fx-pref-height: 180;
+    -fx-pref-width: 180;
+    -fx-background-color: #606060;
+    -fx-background-radius: 12;
+}
+
+.captured-filter-box{
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 12;
+    -fx-border-color: #d7d7d7;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-padding: 12;
+}
+
+.catch-button {
+    -fx-background-color: green;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 5 10;
+    -fx-background-radius: 8;
+}
+
+.random-button {
+    -fx-background-color: blue;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 5 10;
+    -fx-background-radius: 8;
+}
+
 .normal {
     -fx-background-color: #A8A77A;
 }

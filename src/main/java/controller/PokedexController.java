@@ -240,52 +240,52 @@ public class PokedexController {
         if (pokemon != null) {
             // sprite
             Image sprite = new Image(pokemon.sprites);
-            view.filterView.imageView.pokemonImage.setImage(sprite);
+            view.capturedFilterBox.imageView.pokemonImage.setImage(sprite);
             // stats
-            view.filterView.statsView.hp.setText(String.valueOf(pokemon.hp));
-            view.filterView.statsView.attack.setText(String.valueOf(pokemon.attack));
-            view.filterView.statsView.defense.setText(String.valueOf(pokemon.defense));
-            view.filterView.statsView.specialAttack.setText(String.valueOf(pokemon.special_attack));
-            view.filterView.statsView.specialDefense.setText(String.valueOf(pokemon.special_defense));
-            view.filterView.statsView.speed.setText(String.valueOf(pokemon.speed));
+            view.capturedFilterBox.statsView.hp.setText(String.valueOf(pokemon.hp));
+            view.capturedFilterBox.statsView.attack.setText(String.valueOf(pokemon.attack));
+            view.capturedFilterBox.statsView.defense.setText(String.valueOf(pokemon.defense));
+            view.capturedFilterBox.statsView.specialAttack.setText(String.valueOf(pokemon.special_attack));
+            view.capturedFilterBox.statsView.specialDefense.setText(String.valueOf(pokemon.special_defense));
+            view.capturedFilterBox.statsView.speed.setText(String.valueOf(pokemon.speed));
             // id
-            view.filterView.id = pokemon.id;
+            view.capturedFilterBox.id = pokemon.id;
             // types
             // TODO: ----
             if (!pokemonTypes.isEmpty()) {
                 Type typeOne = service.recupererType(pokemonTypes.getFirst().type_id);
-                view.filterView.typesView.typeOne.setText(typeOne.name);
-                view.filterView.typesView.typeOne.getStyleClass().clear();
-                view.filterView.typesView.typeOne.getStyleClass().add(typeOne.name);
-                view.filterView.typesView.typeOne.getStyleClass().add("pokemon-type");
+                view.capturedFilterBox.typesView.typeOne.setText(typeOne.name);
+                view.capturedFilterBox.typesView.typeOne.getStyleClass().clear();
+                view.capturedFilterBox.typesView.typeOne.getStyleClass().add(typeOne.name);
+                view.capturedFilterBox.typesView.typeOne.getStyleClass().add("pokemon-type");
             }
             // Click event to play his cry when clicked
-            view.filterView.imageView.pokemonImage.setOnMouseClicked(e -> {
+            view.capturedFilterBox.imageView.pokemonImage.setOnMouseClicked(e -> {
                 //playPokemonCry(pokemon);
                 System.out.println("Cry URL: " + pokemon.cries);
             });
 
             if (pokemonTypes.size() >= 2) {
                 Type typeTwo = service.recupererType(pokemonTypes.get(1).type_id);
-                view.filterView.typesView.typeTwo.setText(typeTwo.name);
-                view.filterView.typesView.typeTwo.getStyleClass().clear();
-                view.filterView.typesView.typeTwo.getStyleClass().add(typeTwo.name);
-                view.filterView.typesView.typeTwo.getStyleClass().add("pokemon-type");
+                view.capturedFilterBox.typesView.typeTwo.setText(typeTwo.name);
+                view.capturedFilterBox.typesView.typeTwo.getStyleClass().clear();
+                view.capturedFilterBox.typesView.typeTwo.getStyleClass().add(typeTwo.name);
+                view.capturedFilterBox.typesView.typeTwo.getStyleClass().add("pokemon-type");
             } else {
-                view.filterView.typesView.typeTwo.setText("-");
-                view.filterView.typesView.typeTwo.getStyleClass().clear();
+                view.capturedFilterBox.typesView.typeTwo.setText("-");
+                view.capturedFilterBox.typesView.typeTwo.getStyleClass().clear();
             }
 
         } else {
             // Clear the view if no Pokemon is provided
-            view.filterView.imageView.pokemonImage.setImage(null);
-            view.filterView.statsView.hp.setText("");
-            view.filterView.statsView.attack.setText("");
-            view.filterView.statsView.defense.setText("");
-            view.filterView.statsView.specialAttack.setText("");
-            view.filterView.statsView.specialDefense.setText("");
-            view.filterView.statsView.speed.setText("");
-            view.filterView.id = 0;
+            view.capturedFilterBox.imageView.pokemonImage.setImage(null);
+            view.capturedFilterBox.statsView.hp.setText("");
+            view.capturedFilterBox.statsView.attack.setText("");
+            view.capturedFilterBox.statsView.defense.setText("");
+            view.capturedFilterBox.statsView.specialAttack.setText("");
+            view.capturedFilterBox.statsView.specialDefense.setText("");
+            view.capturedFilterBox.statsView.speed.setText("");
+            view.capturedFilterBox.id = 0;
         }
     }
 
@@ -307,8 +307,13 @@ public class PokedexController {
             // Click event for the preview Pokemon image in the left box
             view.pokemonImageFrame.pokemonImage.setOnMouseClicked(e -> {
                 //playPokemonCry(pokemon);
+                //String soundUrl = getClass().getResource("/sounds/pokemon.mp3").toExternalForm();
+                //AudioClip sound = new AudioClip(soundUrl);
+                //sound.play();
                 System.out.println("Cry URL: " + pokemon.cries);
             });
+
+            view.pokemonNameLabel.setText(pokemon.name);
 
         } else {
             // Clear the preview if no Pokemon is provided
