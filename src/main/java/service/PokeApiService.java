@@ -89,6 +89,44 @@ public class PokeApiService {
         return p;
     }
 
+    // helper fonction for recupererEvolutionParID
+    private JsonNode getSpeciesInfo(int id) throws Exception {
+        HttpRequest req = HttpRequest.newBuilder(URI.create(URL + "pokemon-species/" + id)).GET().build();
+        HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
+
+        if (res.statusCode() != 200) {
+            throw new RuntimeException("API erreur: " + res.statusCode());
+        }
+
+        return mapper.readTree(res.body());
+    }
+
+    public List<Pokemon> recupererEvolutionParId(int id) throws Exception {
+        int curId = id;
+        JsonNode speciesInfo = getSpeciesInfo(curId);
+        int order = speciesInfo.get("order").asInt();
+
+        // if order is 1 we have the first evolution
+        while (order != 1) {
+            curId -= 1; // go back one pokemon to try to find the first evolution
+            speciesInfo = getSpeciesInfo(curId);
+            order = speciesInfo.get("order").asInt();
+        } // only exists once we have the first pokemon
+
+        List<Pokemon> evoChain = new ArrayList<>();
+        // takes the current first pokemon in the evo chain and stores its evo chain id
+        int previousSpeciesEvoChainId = getIdFromURL(speciesInfo.get("evolution_chain").asText());
+        // for loops that gaters the pokemon evolution chains information
+        for (int i = curId; i <= curId + 2; i++) {
+            speciesInfo = getSpeciesInfo(i);
+            if (previousSpeciesEvoChainId == getIdFromURL(speciesInfo.get("evolution_chain").asText())) {
+                Pokemon pokemon = recupererPokemon(speciesInfo.get("id").asInt());
+                evoChain.add(pokemon);
+            }
+        }
+        return evoChain;
+    }
+
     public Type recupererType(int id) throws Exception {
         HttpRequest req = HttpRequest.newBuilder(URI.create(URL + "type/" + id)).GET().build();
         HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
