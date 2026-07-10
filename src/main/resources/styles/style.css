@@ -1,3 +1,11 @@
+.root {
+    -fx-background-color: #87CEEB;
+    -fx-background-image: url("../images/background.png");
+    -fx-background-size: cover;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
 .pokemon-type {
     -fx-text-fill: white;
     -fx-font-weight: bold;
@@ -5,12 +13,13 @@
     -fx-background-radius: 8;
 }
 
-.delete-button {
-    -fx-background-color: red;
+.release-button {
+    -fx-background-color: #DC2626;
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-padding: 5 10;
+    -fx-padding: 6 14;
     -fx-background-radius: 8;
+    -fx-pref-width: 100;
 }
 
 .stats-label {
@@ -62,18 +71,13 @@
     -fx-text-fill: #333333;
 }
 
-.captured-count-label {
-    -fx-font-size: 20px;
-    -fx-text-fill: #555555;
-}
-
-
-.wild-label {
+.main-font {
     -fx-font-size: 26px;
     -fx-font-weight: bold;
     -fx-text-fill: #FFCB05;
     -fx-alignment: center;
 }
+
 
 .filter-view {
     -fx-background-color: #f0f0f0;
@@ -83,6 +87,7 @@
     -fx-border-radius: 12;
     -fx-padding: 12;
     -fx-max-height: 300;
+    -fx-alignment: center;
 }
 
 .wild-pokemon-box {
@@ -92,23 +97,75 @@
     -fx-border-width: 1;
     -fx-border-radius: 12;
     -fx-padding: 12;
+
+    -fx-min-width: 240;
+    -fx-min-height: 240;
+    -fx-pref-height: 700;
+    -fx-pref-width: 280;
+    -fx-max-height: 700;
+    -fx-max-width: 280;
+    -fx-alignment: center;
 }
 
 .center-box {
-    -fx-alignment: center;
-    -fx-padding: 25;
+    -fx-alignment: top-center;
+    -fx-spacing: 20;
 }
 
-.captured-list-title {
-    -fx-font-size: 20px;
+.captured-list-label {
+    -fx-font-size: 26px;
     -fx-font-weight: bold;
-    -fx-text-fill: #333333;
-    -fx-padding: 10 0 10 0;
+    -fx-text-fill: #FFCB05;
+    -fx-alignment: center;
+}
+
+.card-info-button {
+    -fx-background-color: #FFCB05;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 5 10;
+    -fx-background-radius: 8;
+    -fx-min-width: 75;
+    -fx-pref-width: 75;
+    -fx-max-width: 75;
+
+    -fx-min-height: 32;
+    -fx-pref-height: 32;
+    -fx-max-height: 32;
+}
+
+.stats-button {
+    -fx-background-color: #3B82F6;
+}
+
+.types-button {
+    -fx-background-color: #22C55E;
+}
+
+.sprite-button {
+    -fx-background-color: #F97316;
+}
+
+.id-button {
+    -fx-background-color: #8B5CF6;
 }
 
 .evolution-box {
     -fx-background-color: #606060;
     -fx-alignment: center;
+}
+
+.evolutions-box {
+    -fx-spacing: 20;
+    -fx-alignment: center;
+    -fx-padding: 12;
+
+    -fx-pref-width: 520;
+    -fx-max-width: 520;
+    -fx-min-width: 360;
+
+    -fx-background-color: #606060;
+    -fx-background-radius: 12;
 }
 
 .evolution-image {
@@ -136,18 +193,46 @@
     -fx-alignment: center;
 }
 
-.evolutions-row{
-    -fx-spacing: 20;
+.captured-list-view {
     -fx-alignment: center;
-    -fx-min-width: 180;
-    -fx-min-height: 180;
-    -fx-pref-height: 180;
-    -fx-pref-width: 180;
-    -fx-background-color: #606060;
-    -fx-background-radius: 12;
 }
 
-.captured-filter-box{
+
+.captured-list-view-box {
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 12;
+    -fx-border-color: #d7d7d7;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-padding: 12;
+    -fx-alignment: center;
+
+    -fx-pref-width: 520;
+    -fx-max-width: 520;
+    -fx-min-width: 360;
+}
+
+.captured-list {
+    -fx-pref-height: 230;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+}
+
+.captured-list .list-cell {
+    -fx-font-size: 14px;
+    -fx-padding: 6 10;
+}
+
+.captured-list .list-cell:filled:selected {
+    -fx-background-color: #2A75BB;
+    -fx-text-fill: white;
+}
+
+.captured-list .list-cell:filled:hover {
+    -fx-background-color: #e8f0ff;
+}
+
+.captured-filter-box {
     -fx-background-color: #f0f0f0;
     -fx-background-radius: 12;
     -fx-border-color: #d7d7d7;

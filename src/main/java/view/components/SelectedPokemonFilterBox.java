@@ -2,25 +2,32 @@ package view.components;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 /**
- * FilterView is a JavaFX HBox that contains buttons to switch between different views (ImagePanel, StatsView, TypesView).
+ * FilterView is a JavaFX VBox that contains buttons to switch between different views (ImagePanel, StatsView, TypesView).
  * It uses CardInfoButtons for the buttons and dynamically updates the content pane based on user interaction.
  */
-public class CapturedFilterBox extends HBox {
+public class SelectedPokemonFilterBox extends VBox {
     public final ImageView imageView;
     public final StatsView statsView;
     public TypesView typesView;
     public int id;
+    public Label pokemonNameLabel;
 
-    public CapturedFilterBox() {
+    public SelectedPokemonFilterBox() {
         CardInfoButtons cardInfoButtons = new CardInfoButtons();
         imageView = new ImageView();
         statsView = new StatsView();
         typesView = new TypesView();
 
-        HBox capturedFilterBox = new HBox();
+        Label selectedPokemonLabel = new Label("Selected Pokemon");
+        selectedPokemonLabel.getStyleClass().add("main-font");
+
+        pokemonNameLabel = new Label("");
+        pokemonNameLabel.getStyleClass().add("pokemon-name-label");
+
+        VBox capturedFilterBox = new VBox();
 
         capturedFilterBox.setSpacing(10);
         capturedFilterBox.setPadding(new Insets(10));
@@ -41,8 +48,7 @@ public class CapturedFilterBox extends HBox {
         cardInfoButtons.idButton.setOnAction(e ->
             capturedFilterBox.getChildren().setAll(new Label("ID: " + id)));
 
-        setSpacing(10);
-        getChildren().addAll(cardInfoButtons, capturedFilterBox);
+        getChildren().addAll(selectedPokemonLabel,pokemonNameLabel, cardInfoButtons, capturedFilterBox);
     }
 }
 

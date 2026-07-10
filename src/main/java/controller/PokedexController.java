@@ -68,7 +68,7 @@ public class PokedexController {
                 }
         );
 
-        view.capturedListView.deleteButton.setOnAction(e -> {
+        view.capturedListView.releaseButton.setOnAction(e -> {
             // Get the selected Pokemon name from the list view.
             String selectedPokemon = view.capturedListView.listView.getSelectionModel().getSelectedItem();
 
@@ -77,11 +77,11 @@ public class PokedexController {
                 return;
             }
 
-            if (!confirmDeletePopUp(selectedPokemon)) {
+            if (!confirmReleasePopUp(selectedPokemon)) {
                 return;
             }
 
-            deletePokemon(selectedPokemon);
+            releasePokemon(selectedPokemon);
             try {
                 displayCardPokedex(null, null);
             } catch (Exception ex) {
@@ -117,11 +117,11 @@ public class PokedexController {
      * @param pokemonName The name of the Pokémon to delete.
      * @return true if the user confirms the deletion, false otherwise.
      */
-    private boolean confirmDeletePopUp(String pokemonName) {
+    private boolean confirmReleasePopUp(String pokemonName) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirm delete");
+        alert.setTitle("Confirm release");
         alert.setHeaderText(null);
-        alert.setContentText("Delete " + pokemonName + "?");
+        alert.setContentText("Release " + pokemonName + "?");
 
         return alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK;
     }
@@ -179,10 +179,10 @@ public class PokedexController {
     /**
      * Deletes a Pokémon from the database by its name.
      *
-     * @param name The name of the Pokémon to delete.
+     * @param name The name of the Pokémon to release.
      */
-    private void deletePokemon(String name) {
-        // TODO: Add confirmation dialog before deletion
+    private void releasePokemon(String name) {
+        // TODO: Add confirmation dialog before release
         try {
             //TODO: Try with array method.
             for (Pokemon pokemon : pokemonDAO.lister()) {
@@ -240,52 +240,55 @@ public class PokedexController {
         if (pokemon != null) {
             // sprite
             Image sprite = new Image(pokemon.sprites);
-            view.capturedFilterBox.imageView.pokemonImage.setImage(sprite);
+            // name
+            view.selectedPokemonFilterBox.pokemonNameLabel.setText(pokemon.name);
+            // image
+            view.selectedPokemonFilterBox.imageView.pokemonImage.setImage(sprite);
             // stats
-            view.capturedFilterBox.statsView.hp.setText(String.valueOf(pokemon.hp));
-            view.capturedFilterBox.statsView.attack.setText(String.valueOf(pokemon.attack));
-            view.capturedFilterBox.statsView.defense.setText(String.valueOf(pokemon.defense));
-            view.capturedFilterBox.statsView.specialAttack.setText(String.valueOf(pokemon.special_attack));
-            view.capturedFilterBox.statsView.specialDefense.setText(String.valueOf(pokemon.special_defense));
-            view.capturedFilterBox.statsView.speed.setText(String.valueOf(pokemon.speed));
+            view.selectedPokemonFilterBox.statsView.hp.setText(String.valueOf(pokemon.hp));
+            view.selectedPokemonFilterBox.statsView.attack.setText(String.valueOf(pokemon.attack));
+            view.selectedPokemonFilterBox.statsView.defense.setText(String.valueOf(pokemon.defense));
+            view.selectedPokemonFilterBox.statsView.specialAttack.setText(String.valueOf(pokemon.special_attack));
+            view.selectedPokemonFilterBox.statsView.specialDefense.setText(String.valueOf(pokemon.special_defense));
+            view.selectedPokemonFilterBox.statsView.speed.setText(String.valueOf(pokemon.speed));
             // id
-            view.capturedFilterBox.id = pokemon.id;
+            view.selectedPokemonFilterBox.id = pokemon.id;
             // types
             // TODO: ----
             if (!pokemonTypes.isEmpty()) {
                 Type typeOne = service.recupererType(pokemonTypes.getFirst().type_id);
-                view.capturedFilterBox.typesView.typeOne.setText(typeOne.name);
-                view.capturedFilterBox.typesView.typeOne.getStyleClass().clear();
-                view.capturedFilterBox.typesView.typeOne.getStyleClass().add(typeOne.name);
-                view.capturedFilterBox.typesView.typeOne.getStyleClass().add("pokemon-type");
+                view.selectedPokemonFilterBox.typesView.typeOne.setText(typeOne.name);
+                view.selectedPokemonFilterBox.typesView.typeOne.getStyleClass().clear();
+                view.selectedPokemonFilterBox.typesView.typeOne.getStyleClass().add(typeOne.name);
+                view.selectedPokemonFilterBox.typesView.typeOne.getStyleClass().add("pokemon-type");
             }
             // Click event to play his cry when clicked
-            view.capturedFilterBox.imageView.pokemonImage.setOnMouseClicked(e -> {
+            view.selectedPokemonFilterBox.imageView.pokemonImage.setOnMouseClicked(e -> {
                 //playPokemonCry(pokemon);
                 System.out.println("Cry URL: " + pokemon.cries);
             });
 
             if (pokemonTypes.size() >= 2) {
                 Type typeTwo = service.recupererType(pokemonTypes.get(1).type_id);
-                view.capturedFilterBox.typesView.typeTwo.setText(typeTwo.name);
-                view.capturedFilterBox.typesView.typeTwo.getStyleClass().clear();
-                view.capturedFilterBox.typesView.typeTwo.getStyleClass().add(typeTwo.name);
-                view.capturedFilterBox.typesView.typeTwo.getStyleClass().add("pokemon-type");
+                view.selectedPokemonFilterBox.typesView.typeTwo.setText(typeTwo.name);
+                view.selectedPokemonFilterBox.typesView.typeTwo.getStyleClass().clear();
+                view.selectedPokemonFilterBox.typesView.typeTwo.getStyleClass().add(typeTwo.name);
+                view.selectedPokemonFilterBox.typesView.typeTwo.getStyleClass().add("pokemon-type");
             } else {
-                view.capturedFilterBox.typesView.typeTwo.setText("-");
-                view.capturedFilterBox.typesView.typeTwo.getStyleClass().clear();
+                view.selectedPokemonFilterBox.typesView.typeTwo.setText("-");
+                view.selectedPokemonFilterBox.typesView.typeTwo.getStyleClass().clear();
             }
 
         } else {
             // Clear the view if no Pokemon is provided
-            view.capturedFilterBox.imageView.pokemonImage.setImage(null);
-            view.capturedFilterBox.statsView.hp.setText("");
-            view.capturedFilterBox.statsView.attack.setText("");
-            view.capturedFilterBox.statsView.defense.setText("");
-            view.capturedFilterBox.statsView.specialAttack.setText("");
-            view.capturedFilterBox.statsView.specialDefense.setText("");
-            view.capturedFilterBox.statsView.speed.setText("");
-            view.capturedFilterBox.id = 0;
+            view.selectedPokemonFilterBox.imageView.pokemonImage.setImage(null);
+            view.selectedPokemonFilterBox.statsView.hp.setText("");
+            view.selectedPokemonFilterBox.statsView.attack.setText("");
+            view.selectedPokemonFilterBox.statsView.defense.setText("");
+            view.selectedPokemonFilterBox.statsView.specialAttack.setText("");
+            view.selectedPokemonFilterBox.statsView.specialDefense.setText("");
+            view.selectedPokemonFilterBox.statsView.speed.setText("");
+            view.selectedPokemonFilterBox.id = 0;
         }
     }
 

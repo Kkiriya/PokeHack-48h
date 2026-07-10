@@ -4,8 +4,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import view.screens.PokedexView;
 
-import java.sql.SQLException;
-
 public class MainFx extends Application {
 
     @Override
@@ -15,12 +13,15 @@ public class MainFx extends Application {
         PokedexController controller = new PokedexController(pokedexView);
         controller.start();
 
-        Scene scene = new Scene(pokedexView.getRoot(), 800, 600);
-        stage.setTitle("Pokedex");
-        stage.setScene(scene);
+        Scene scene = new Scene(pokedexView.getRoot(), 1440, 810);
         scene.getStylesheets().add(
                 getClass().getResource("/styles/style.css").toExternalForm()
         );
+
+        stage.setTitle("Pokedex");
+        stage.setScene(scene);
+        stage.setMinHeight(760);
+        stage.setMinWidth(1300);
         stage.show();
     }
 

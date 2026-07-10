@@ -12,7 +12,8 @@ public class EvolutionsBox extends VBox {
 
     // Constructor
     public EvolutionsBox() {
-        Label evolutionsLabel = new Label("Evolutions:");
+        Label evolutionsLabel = new Label("Evolutions");
+        evolutionsLabel.getStyleClass().add("main-font");
 
         HBox evolutionsRow = new HBox(10,
                 createEvolutionBox("Bulbasaur", "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"),
@@ -20,7 +21,6 @@ public class EvolutionsBox extends VBox {
                 createEvolutionBox("Venusaur", "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png")
         );
         evolutionsRow.setAlignment(Pos.CENTER);
-        evolutionsRow.getStyleClass().add("evolutions-row");
 
         getChildren().addAll(evolutionsLabel, evolutionsRow);
     }
