@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
@@ -9,6 +10,7 @@ import view.screens.PokedexView;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -53,20 +55,20 @@ public class PokedexController {
                     if (newValue == null) {
                         return;
                     }
-                    try {
-                        //TODO: Try with array method.
-                        for (Pokemon pokemon : pokemonDAO.lister()) {
-                            if (pokemon.name.equals(newValue)) {
-
-                                List<PokemonTypes> pokemonTypes = service.recupererPokemonTypes(pokemon.id);
-
-                                displayCardPokedex(pokemon, pokemonTypes);
-                                break;
+                    new Thread(() -> {
+                        try {
+                            //TODO: Try with array method.
+                            for (Pokemon pokemon : pokemonDAO.lister()) {
+                                if (pokemon.name.equals(newValue)) {
+                                    List<Type> types = recupererTypesPokemon(pokemon.id);
+                                    Platform.runLater(() -> displayCardPokedex(pokemon, types));
+                                    break;
+                                }
                             }
+                        } catch (Exception e) {
+                            Platform.runLater(() -> showErrorPopup("Not able to load selected Pokemon."));
                         }
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
+                    }).start();
                 }
         );
 
@@ -84,11 +86,7 @@ public class PokedexController {
             }
 
             releasePokemon(selectedPokemon);
-            try {
-                displayCardPokedex(null, null);
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
+            displayCardPokedex(null, null);
         });
 
         // Captured count label update
@@ -136,46 +134,35 @@ public class PokedexController {
             return;
         }
 
-        Pokemon pokemon;
-
-        if (idOrName.matches("^[0-9]+$")) {
+        // Load the Pokemon in a separate thread to avoid blocking the UI
+        new Thread(() -> {
             try {
-                System.out.println("Loading Pokemon with ID " + idOrName);
-                // Retrieve Pokemon data from the API
-                pokemon = service.recupererPokemon(Integer.parseInt(idOrName));
+                Pokemon pokemon;
+
+                if (idOrName.matches("^[0-9]+$")) {
+                    System.out.println("Loading Pokemon with ID " + idOrName);
+                    pokemon = service.recupererPokemon(Integer.parseInt(idOrName));
+                } else {
+                    System.out.println("Loading Pokemon with Name: " + idOrName);
+                    pokemon = service.recupererPokemonParNom(idOrName);
+                }
+
+                List<PokemonTypes> pokemonTypes = service.recupererPokemonTypes(pokemon.id);
+                List<Type> types = recupererTypesPokemon(pokemonTypes);
+
+                pokemonDAO.sauvegarder(pokemon);
+                for (PokemonTypes pokemonType : pokemonTypes) {
+                    pokemonTypesDAO.sauvegarder(pokemonType);
+                }
+
+                Platform.runLater(() -> {
+                    displayCardPokedex(pokemon, types);
+                    refreshList();
+                });
             } catch (Exception e) {
-                showErrorPopup("Invalid ID. Please enter a valid integer.");
-                return;
+                Platform.runLater(() -> showErrorPopup("Invalid Name or ID. Please enter a valid Pokemon."));
             }
-        } else {
-            try {
-                System.out.println("Loading Pokemon with Name: " + idOrName);
-                // Retrieve Pokemon data from the API
-                pokemon = service.recupererPokemonParNom(idOrName);
-            } catch (Exception e) {
-                showErrorPopup("Invalid Name. Please enter a valid Name.");
-                return;
-            }
-        }
-
-        try {
-            // retrieves pokemonTypes from API
-            List<PokemonTypes> pokemonTypes = service.recupererPokemonTypes(pokemon.id);
-
-            // Save the Pokemon data to the database
-            pokemonDAO.sauvegarder(pokemon);
-            for (PokemonTypes pokemonType : pokemonTypes) {
-                // Save the Pokemon type data to the database
-                pokemonTypesDAO.sauvegarder(pokemonType);
-            }
-
-            displayCardPokedex(pokemon, pokemonTypes);
-            refreshList();
-        } catch (Exception e) {
-            // TODO: Display error on screen instead of printing to console
-            // Handle exceptions (e.g., show an error message in the view)
-            System.err.println("Error loading Pokemon: " + e.getMessage());
-        }
+        }).start();
     }
 
     /**
@@ -184,7 +171,6 @@ public class PokedexController {
      * @param name The name of the Pokémon to release.
      */
     private void releasePokemon(String name) {
-        // TODO: Add confirmation dialog before release
         try {
             //TODO: Try with array method.
             for (Pokemon pokemon : pokemonDAO.lister()) {
@@ -213,8 +199,7 @@ public class PokedexController {
                 view.capturedListView.listView.getItems().add(pokemon.name);
             }
         } catch (Exception e) {
-            // TODO: Display error on screen instead of printing to console
-            System.err.println("Error loading Pokemon: " + e.getMessage());
+            showErrorPopup("Not able to load Pokemon list.");
         }
         refreshCapturedCount();
     }
@@ -235,9 +220,23 @@ public class PokedexController {
     /**
      * Displays the details of a Pokémon in the PokedexView.
      *
-     * @param pokemon The Pokémon object containing the details to display.
+     * @param pokemonId The ID of the Pokémon to display.
      */
-    private void displayCardPokedex(Pokemon pokemon, List<PokemonTypes> pokemonTypes) throws Exception {
+    private List<Type> recupererTypesPokemon(int pokemonId) throws Exception {
+        return recupererTypesPokemon(service.recupererPokemonTypes(pokemonId));
+    }
+
+    private List<Type> recupererTypesPokemon(List<PokemonTypes> pokemonTypes) throws Exception {
+        List<Type> types = new java.util.ArrayList<>();
+
+        for (PokemonTypes pokemonType : pokemonTypes) {
+            types.add(service.recupererType(pokemonType.type_id));
+        }
+
+        return types;
+    }
+
+    private void displayCardPokedex(Pokemon pokemon, List<Type> pokemonTypes) {
         // Update the view with the Pokemon data
         if (pokemon != null) {
             // sprite
@@ -257,9 +256,8 @@ public class PokedexController {
             view.selectedPokemonFilterBox.id = pokemon.id;
             view.selectedPokemonFilterBox.pokemonIdLabel.setText("#" + pokemon.id);
             // types
-            // TODO: ----
             if (!pokemonTypes.isEmpty()) {
-                Type typeOne = service.recupererType(pokemonTypes.getFirst().type_id);
+                Type typeOne = pokemonTypes.getFirst();
                 view.selectedPokemonFilterBox.typesView.typeOne.setText(typeOne.name);
                 view.selectedPokemonFilterBox.typesView.typeOne.getStyleClass().clear();
                 view.selectedPokemonFilterBox.typesView.typeOne.getStyleClass().add(typeOne.name);
@@ -270,7 +268,7 @@ public class PokedexController {
                     playPokemonCry());
 
             if (pokemonTypes.size() >= 2) {
-                Type typeTwo = service.recupererType(pokemonTypes.get(1).type_id);
+                Type typeTwo = pokemonTypes.get(1);
                 view.selectedPokemonFilterBox.typesView.typeTwo.setText(typeTwo.name);
                 view.selectedPokemonFilterBox.typesView.typeTwo.getStyleClass().clear();
                 view.selectedPokemonFilterBox.typesView.typeTwo.getStyleClass().add(typeTwo.name);
@@ -300,6 +298,12 @@ public class PokedexController {
             view.selectedPokemonFilterBox.statsView.specialDefense.setText("");
             view.selectedPokemonFilterBox.statsView.speed.setText("");
             view.selectedPokemonFilterBox.id = 0;
+            view.selectedPokemonFilterBox.pokemonIdLabel.setText("");
+            view.selectedPokemonFilterBox.pokemonNameLabel.setText("");
+            view.selectedPokemonFilterBox.typesView.typeOne.setText("");
+            view.selectedPokemonFilterBox.typesView.typeOne.getStyleClass().clear();
+            view.selectedPokemonFilterBox.typesView.typeTwo.setText("");
+            view.selectedPokemonFilterBox.typesView.typeTwo.getStyleClass().clear();
         }
     }
 
@@ -348,25 +352,38 @@ public class PokedexController {
             return;
         }
 
-        Pokemon pokemon;
+        String searchedText = text.strip();
 
-        try {
-            if (text.strip().matches("^[0-9]+$")) {
-                pokemon = service.recupererPokemon(Integer.parseInt(text));
-            } else {
-                pokemon = service.recupererPokemonParNom(text);
+        // Load the Pokemon in a separate thread to avoid blocking the UI
+        new Thread(() -> {
+            try {
+                Pokemon pokemon;
+
+                if (searchedText.matches("^[0-9]+$")) {
+                    pokemon = service.recupererPokemon(Integer.parseInt(searchedText));
+                } else {
+                    pokemon = service.recupererPokemonParNom(searchedText);
+                }
+
+                Platform.runLater(() -> {
+                    if (view.searchBox.searchField.getText().strip().equals(searchedText)) {
+                        displayLeftPreview(pokemon);
+                    }
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> {
+                    if (view.searchBox.searchField.getText().strip().equals(searchedText)) {
+                        displayLeftPreview(null);
+                    }
+                });
+                System.err.println("Error previewing Pokemon: " + e.getMessage());
             }
-            displayLeftPreview(pokemon);
-        } catch (Exception e) {
-            displayLeftPreview(null);
-            // TODO: Display error on screen instead of printing to console
-            System.err.println("Error previewing Pokemon: " + e.getMessage());
-        }
+        }).start();
     }
 
     // Plays the cry sound of the given Pokémon. Do not work with url because it do not support .ogg format.
     private void playPokemonCry() {
-        String soundUrl = getClass().getResource("/sounds/pokemon.mp3").toExternalForm();
+        String soundUrl = Objects.requireNonNull(getClass().getResource("/sounds/pokemon.mp3")).toExternalForm();
         AudioClip sound = new AudioClip(soundUrl);
         sound.play();
     }
