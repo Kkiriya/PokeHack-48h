@@ -1,6 +1,8 @@
 package controller;
 
+import javafx.geometry.HPos;
 import javafx.scene.image.Image;
+import javafx.scene.layout.GridPane;
 import model.*;
 import service.PokeApiService;
 import view.screens.PokedexView;
@@ -129,7 +131,7 @@ public class PokedexController {
     private void loadFromApi() {
         String idOrName = view.searchBox.searchField.getText().strip();
 
-        if (idOrName.isBlank()){
+        if (idOrName.isBlank()) {
             showErrorPopup("Invalid Name or ID, please enter valid Name or ID");
             return;
         }
@@ -253,6 +255,7 @@ public class PokedexController {
             view.selectedPokemonFilterBox.statsView.speed.setText(String.valueOf(pokemon.speed));
             // id
             view.selectedPokemonFilterBox.id = pokemon.id;
+            view.selectedPokemonFilterBox.pokemonIdLabel.setText("#" + pokemon.id);
             // types
             // TODO: ----
             if (!pokemonTypes.isEmpty()) {
@@ -263,10 +266,8 @@ public class PokedexController {
                 view.selectedPokemonFilterBox.typesView.typeOne.getStyleClass().add("pokemon-type");
             }
             // Click event to play his cry when clicked
-            view.selectedPokemonFilterBox.imageView.pokemonImage.setOnMouseClicked(e -> {
-                //playPokemonCry(pokemon);
-                System.out.println("Cry URL: " + pokemon.cries);
-            });
+            view.selectedPokemonFilterBox.imageView.pokemonImage.setOnMouseClicked(e ->
+                    playPokemonCry());
 
             if (pokemonTypes.size() >= 2) {
                 Type typeTwo = service.recupererType(pokemonTypes.get(1).type_id);
@@ -274,9 +275,19 @@ public class PokedexController {
                 view.selectedPokemonFilterBox.typesView.typeTwo.getStyleClass().clear();
                 view.selectedPokemonFilterBox.typesView.typeTwo.getStyleClass().add(typeTwo.name);
                 view.selectedPokemonFilterBox.typesView.typeTwo.getStyleClass().add("pokemon-type");
+                // Show the second type and adjust the layout to accommodate it
+                view.selectedPokemonFilterBox.typesView.typeTwo.setVisible(true);
+                view.selectedPokemonFilterBox.typesView.typeTwo.setManaged(true);
+                GridPane.setColumnSpan(view.selectedPokemonFilterBox.typesView.typeOne, 1);
+                GridPane.setHalignment(view.selectedPokemonFilterBox.typesView.typeOne, HPos.LEFT);
             } else {
-                view.selectedPokemonFilterBox.typesView.typeTwo.setText("-");
+                // No second type, put the first into two columns
+                view.selectedPokemonFilterBox.typesView.typeTwo.setText("");
                 view.selectedPokemonFilterBox.typesView.typeTwo.getStyleClass().clear();
+                view.selectedPokemonFilterBox.typesView.typeTwo.setVisible(false);
+                view.selectedPokemonFilterBox.typesView.typeTwo.setManaged(false);
+                GridPane.setColumnSpan(view.selectedPokemonFilterBox.typesView.typeOne, 2);
+                GridPane.setHalignment(view.selectedPokemonFilterBox.typesView.typeOne, HPos.CENTER);
             }
 
         } else {
@@ -308,13 +319,8 @@ public class PokedexController {
             view.statsGrid.speed.setText(String.valueOf(pokemon.speed));
 
             // Click event for the preview Pokemon image in the left box
-            view.pokemonImageFrame.pokemonImage.setOnMouseClicked(e -> {
-                //playPokemonCry(pokemon);
-                //String soundUrl = getClass().getResource("/sounds/pokemon.mp3").toExternalForm();
-                //AudioClip sound = new AudioClip(soundUrl);
-                //sound.play();
-                System.out.println("Cry URL: " + pokemon.cries);
-            });
+            view.pokemonImageFrame.pokemonImage.setOnMouseClicked(e ->
+                playPokemonCry());
 
             view.pokemonNameLabel.setText(pokemon.name);
 
@@ -358,8 +364,10 @@ public class PokedexController {
         }
     }
 
-    private void playPokemonCry(Pokemon pokemon) {
-        AudioClip cry = new AudioClip(pokemon.cries);
-        cry.play();
+    // Plays the cry sound of the given Pokémon. Do not work with url because it do not support .ogg format.
+    private void playPokemonCry() {
+        String soundUrl = getClass().getResource("/sounds/pokemon.mp3").toExternalForm();
+        AudioClip sound = new AudioClip(soundUrl);
+        sound.play();
     }
 }
