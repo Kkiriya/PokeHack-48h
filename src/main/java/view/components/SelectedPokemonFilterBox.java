@@ -14,12 +14,18 @@ public class SelectedPokemonFilterBox extends VBox {
     public TypesView typesView;
     public int id;
     public Label pokemonNameLabel;
+    public Label pokemonIdLabel;
 
     public SelectedPokemonFilterBox() {
         CardInfoButtons cardInfoButtons = new CardInfoButtons();
         imageView = new ImageView();
         statsView = new StatsView();
         typesView = new TypesView();
+
+        pokemonIdLabel = new Label("");
+        pokemonIdLabel.getStyleClass().add("pokemon-id");
+        VBox idBox = new VBox(pokemonIdLabel);
+        idBox.getStyleClass().add("id-view");
 
         Label selectedPokemonLabel = new Label("Selected Pokemon");
         selectedPokemonLabel.getStyleClass().add("main-font");
@@ -46,7 +52,7 @@ public class SelectedPokemonFilterBox extends VBox {
             capturedFilterBox.getChildren().setAll(typesView));
 
         cardInfoButtons.idButton.setOnAction(e ->
-            capturedFilterBox.getChildren().setAll(new Label("ID: " + id)));
+                capturedFilterBox.getChildren().setAll(idBox));
 
         getChildren().addAll(selectedPokemonLabel,pokemonNameLabel, cardInfoButtons, capturedFilterBox);
     }

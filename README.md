@@ -80,7 +80,7 @@ mvn javafx:run
 - [X] Compteur en bas
 - [ ] Focus automatique
 - [ ] Cri du Pokémon
-- [ ] Bouton **Random**
+- [X] Bouton **Random**
 - [ ] Filtre par type
 - [ ] Tri intelligent
 - [ ] Autocomplétion

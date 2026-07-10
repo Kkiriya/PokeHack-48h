@@ -9,8 +9,11 @@
 .pokemon-type {
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-padding: 5 10;
-    -fx-background-radius: 8;
+    -fx-font-size: 16px;
+    -fx-padding: 8 16;
+    -fx-background-radius: 999;
+    -fx-min-width: 110;
+    -fx-alignment: center;
 }
 
 .release-button {
@@ -25,7 +28,7 @@
 .stats-label {
     -fx-font-size: 20px;
     -fx-font-weight: bold;
-    -fx-text-fill: #333333;
+    -fx-text-fill: #263238;
 }
 
 .pokemon-image-frame {
@@ -41,6 +44,12 @@
     -fx-pref-height: 240;
 }
 
+.pokemon-id {
+    -fx-font-size: 42px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #8B5CF6;
+}
+
 .pokemon-image-frame .pokemon-image {
     -fx-smooth: true;
 }
@@ -48,9 +57,9 @@
 .stats-grid {
     -fx-hgap: 10;
     -fx-vgap: 10;
-    -fx-background-color: #b8b7b7;
+    -fx-background-color: #F3F7FB;
     -fx-background-radius: 12;
-    -fx-border-color: #d7d7d7;
+    -fx-border-color: #D7E3F0;
     -fx-border-width: 1;
     -fx-border-radius: 12;
     -fx-padding: 12;
@@ -62,7 +71,8 @@
 
 .stats-value {
     -fx-font-size: 20px;
-    -fx-text-fill: #0877b8;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2A75BB;
 }
 
 .pokemon-name-label {
@@ -142,12 +152,43 @@
     -fx-background-color: #22C55E;
 }
 
+.types-title{
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-alignment: center;
+}
+
+.types-view {
+    -fx-background-color: #f3f4f6;
+    -fx-background-radius: 12;
+    -fx-border-color: #d7d7d7;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-padding: 20;
+    -fx-alignment: center;
+    -fx-hgap: 12;
+    -fx-vgap: 12;
+}
+
 .sprite-button {
     -fx-background-color: #F97316;
 }
 
 .id-button {
     -fx-background-color: #8B5CF6;
+}
+
+.id-view {
+    -fx-background-color: #f3f4f6;
+    -fx-background-radius: 12;
+    -fx-border-color: #d7d7d7;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-padding: 30;
+    -fx-alignment: center;
+    -fx-min-width: 220;
+    -fx-min-height: 180;
 }
 
 .evolution-box {
@@ -239,6 +280,7 @@
     -fx-border-width: 1;
     -fx-border-radius: 12;
     -fx-padding: 12;
+    -fx-alignment: center;
 }
 
 .catch-button {
