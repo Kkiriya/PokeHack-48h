@@ -17,36 +17,64 @@ public class StatsView extends GridPane {
 
     public StatsView() {
         statsGrid = new GridPane();
-        statsGrid.setHgap(10);
-        statsGrid.setVgap(10);
         statsGrid.setPadding(new Insets(10));
 
         hp = new Label("-");
-        attack = new Label("-");
-        defense = new Label("-");
-        specialAttack = new Label("-");
-        specialDefense = new Label("-");
-        speed = new Label("-");
+        hp.getStyleClass().add("stats-value");
 
-        statsGrid.add(new Label("HP:"), 0, 0);
+        attack = new Label("-");
+        attack.getStyleClass().add("stats-value");
+
+        defense = new Label("-");
+        defense.getStyleClass().add("stats-value");
+
+        specialAttack = new Label("-");
+        specialAttack.getStyleClass().add("stats-value");
+
+        specialDefense = new Label("-");
+        specialDefense.getStyleClass().add("stats-value");
+
+        Label hpLabel = new Label("HP:");
+        hpLabel.getStyleClass().add("stats-label");
+
+        Label attackLabel = new Label("Attack:");
+        attackLabel.getStyleClass().add("stats-label");
+
+        Label defenseLabel = new Label("Defense:");
+        defenseLabel.getStyleClass().add("stats-label");
+
+        Label specialAttackLabel = new Label("Special Attack:");
+        specialAttackLabel.getStyleClass().add("stats-label");
+
+        Label specialDefenseLabel = new Label("Special Defense:");
+        specialDefenseLabel.getStyleClass().add("stats-label");
+
+        Label speedLabel = new Label("Speed:");
+        speedLabel.getStyleClass().add("stats-label");
+
+        speed = new Label("-");
+        speed.getStyleClass().add("stats-value");
+
+        statsGrid.add((hpLabel), 0, 0);
         statsGrid.add((hp), 1, 0);
 
-        statsGrid.add(new Label("Attack:"), 0, 1);
+        statsGrid.add((attackLabel), 0, 1);
         statsGrid.add((attack), 1, 1);
 
-        statsGrid.add(new Label("Defense:"), 0, 2);
+        statsGrid.add((defenseLabel), 0, 2);
         statsGrid.add(defense, 1, 2);
 
-        statsGrid.add(new Label("Special Attack:"), 0, 3);
+        statsGrid.add((specialAttackLabel), 0, 3);
         statsGrid.add((specialAttack), 1, 3);
 
-        statsGrid.add(new Label("Special Defense:"), 0, 4);
+        statsGrid.add((specialDefenseLabel), 0, 4);
         statsGrid.add((specialDefense), 1, 4);
 
-        statsGrid.add(new Label("Speed:"), 0, 5);
+        statsGrid.add((speedLabel), 0, 5);
         statsGrid.add((speed), 1, 5);
 
-        statsGrid.setStyle("-fx-border-color: black; -fx-border-width: 1; -fx-background-color: white;");
+        // Css styling
+        statsGrid.getStyleClass().add("stats-grid");
 
         getChildren().add(statsGrid);
     }

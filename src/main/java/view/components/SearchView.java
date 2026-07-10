@@ -21,11 +21,13 @@ public class SearchView extends HBox {
         HBox.setHgrow(searchField, Priority.ALWAYS);
 
         randomButton = new Button("Random Id");
+        randomButton.getStyleClass().add("random-button");
 
         VBox searchBox = new VBox(searchField,randomButton);
-        searchBox.setPadding(new Insets(0, 0, 0, 10));
+        VBox.setMargin(randomButton, new Insets(10, 0, 0, 0));
 
         catchButton = new Button("Catch");
+        catchButton.getStyleClass().add("catch-button");
 
         getChildren().addAll(searchBox, catchButton);
     }

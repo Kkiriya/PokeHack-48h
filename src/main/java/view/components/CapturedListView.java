@@ -1,5 +1,6 @@
 package view.components;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -13,8 +14,13 @@ public class CapturedListView extends VBox {
         listView = new ListView<>();
 
         deleteButton = new Button("Delete");
+        deleteButton.getStyleClass().add("delete-button");
 
-        VBox listViewBox = new VBox(new Label("Captured Pokemon"), listView, deleteButton);
+        Label titleLabel = new Label("Captured Pokemon");
+        titleLabel.getStyleClass().add("captured-list-title");
+
+        VBox listViewBox = new VBox((titleLabel), listView, deleteButton);
+        VBox.setMargin(deleteButton, new Insets(10, 0, 0, 0));
         listViewBox.setSpacing(0);
 
         getChildren().add(listViewBox);
