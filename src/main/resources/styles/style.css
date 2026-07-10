@@ -1,4 +1,4 @@
-.root {
+.app-background {
     -fx-background-color: #87CEEB;
     -fx-background-image: url("../images/background.png");
     -fx-background-size: cover;
