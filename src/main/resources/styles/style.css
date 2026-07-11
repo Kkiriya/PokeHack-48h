@@ -196,6 +196,20 @@
     -fx-alignment: center;
 }
 
+.evolution-image-arrow {
+    -fx-background-image: url("../images/evolution_arrow.png");
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+    -fx-min-width: 45;
+    -fx-min-height: 45;
+    -fx-pref-width: 45;
+    -fx-pref-height: 45;
+    -fx-max-width: 45;
+    -fx-max-height: 45;
+    -fx-alignment: center;
+}
+
 .evolutions-box {
     -fx-spacing: 20;
     -fx-alignment: center;

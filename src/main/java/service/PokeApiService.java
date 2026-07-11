@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import model.*;
-import model.enums.MoveDmgClass;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -26,7 +25,8 @@ public class PokeApiService {
 
     // helper method to extract the id out of a URL, works for all major tables
     private int getIdFromURL(String url) {
-        String[] sections = url.split("/");
+        String cleanUrl = url.endsWith("/") ? url.substring(0, url.length() - 1) : url;
+        String[] sections = cleanUrl.split("/");
         return Integer.parseInt(sections[sections.length - 1]);
     }
 
@@ -101,30 +101,35 @@ public class PokeApiService {
         return mapper.readTree(res.body());
     }
 
-    public List<Pokemon> recupererEvolutionParId(int id) throws Exception {
-        int curId = id;
-        JsonNode speciesInfo = getSpeciesInfo(curId);
-        int order = speciesInfo.get("order").asInt();
+    private JsonNode getJsonFromUrl(String url) throws Exception {
+        HttpRequest req = HttpRequest.newBuilder(URI.create(url)).GET().build();
+        HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
 
-        // if order is 1 we have the first evolution
-        while (order != 1) {
-            curId -= 1; // go back one pokemon to try to find the first evolution
-            speciesInfo = getSpeciesInfo(curId);
-            order = speciesInfo.get("order").asInt();
-        } // only exists once we have the first pokemon
-
-        List<Pokemon> evoChain = new ArrayList<>();
-        // takes the current first pokemon in the evo chain and stores its evo chain id
-        int previousSpeciesEvoChainId = getIdFromURL(speciesInfo.get("evolution_chain").asText());
-        // for loops that gaters the pokemon evolution chains information
-        for (int i = curId; i <= curId + 2; i++) {
-            speciesInfo = getSpeciesInfo(i);
-            if (previousSpeciesEvoChainId == getIdFromURL(speciesInfo.get("evolution_chain").asText())) {
-                Pokemon pokemon = recupererPokemon(speciesInfo.get("id").asInt());
-                evoChain.add(pokemon);
-            }
+        if (res.statusCode() != 200) {
+            throw new RuntimeException("API erreur: " + res.statusCode());
         }
-        return evoChain;
+
+        return mapper.readTree(res.body());
+    }
+
+    public List<Pokemon> recupererEvolutionParId(int id) throws Exception {
+        JsonNode speciesInfo = getSpeciesInfo(id);
+        String evolutionChainUrl = speciesInfo.get("evolution_chain").get("url").asText();
+        JsonNode evolutionChain = getJsonFromUrl(evolutionChainUrl);
+
+        List<Pokemon> evolutions = new ArrayList<>();
+        addEvolutionChainPokemon(evolutionChain.get("chain"), evolutions);
+        return evolutions;
+    }
+
+    private void addEvolutionChainPokemon(JsonNode evolutionNode, List<Pokemon> evolutions) throws Exception {
+        String speciesUrl = evolutionNode.get("species").get("url").asText();
+        int pokemonId = getIdFromURL(speciesUrl);
+        evolutions.add(recupererPokemon(pokemonId));
+
+        for (JsonNode nextEvolution : evolutionNode.get("evolves_to")) {
+            addEvolutionChainPokemon(nextEvolution, evolutions);
+        }
     }
 
     public Type recupererType(int id) throws Exception {
@@ -195,7 +200,7 @@ public class PokeApiService {
         // getting effect_entries
         m.effect_entries = null;
         for (JsonNode effect_entries: move.get("effect_entries")) {
-            if (effect_entries.get("language").get("name").equals("en")) {
+            if (effect_entries.get("language").get("name").asText().equals("en")) {
                 m.effect_entries = effect_entries.get("effect").asText();
             }
         }

@@ -50,6 +50,7 @@ public class PokedexController {
 
         view.searchBox.catchButton.setOnAction(e -> loadFromApi());
 
+        // When a Pokemon is selected in the captured list, display its details in the Pokédex card.
         view.capturedListView.listView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> {
                     if (newValue == null) {
@@ -62,6 +63,7 @@ public class PokedexController {
                                 if (pokemon.name.equals(newValue)) {
                                     List<Type> types = recupererTypesPokemon(pokemon.id);
                                     Platform.runLater(() -> displayCardPokedex(pokemon, types));
+                                    evolutionChain(pokemon);
                                     break;
                                 }
                             }
@@ -381,10 +383,31 @@ public class PokedexController {
         }).start();
     }
 
-    // Plays the cry sound of the given Pokémon. Do not work with url because it do not support .ogg format.
+    // Plays the cry sound of the given Pokémon. Do not work with url because it does not support .ogg format.
     private void playPokemonCry() {
         String soundUrl = Objects.requireNonNull(getClass().getResource("/sounds/pokemon.mp3")).toExternalForm();
         AudioClip sound = new AudioClip(soundUrl);
         sound.play();
+    }
+
+    /**
+     * Retrieves the evolution chain for a given Pokémon and updates the evolutions box in the view.
+     *
+     * @param pokemon The Pokémon for which to retrieve the evolution chain.
+     */
+    private void evolutionChain(Pokemon pokemon) {
+        new Thread(() -> {
+            try {
+                List<Pokemon> evolutions = service.recupererEvolutionParId(pokemon.id);
+
+                for (Pokemon e : evolutions) {
+                    System.out.println("Evolution: " + e.name);
+                }
+
+                Platform.runLater(() -> view.evolutionsBox.setEvolutions(evolutions));
+            } catch (Exception e) {
+                Platform.runLater(() -> showErrorPopup("Not able to load evolution chain for " + pokemon.name));
+            }
+        }).start();
     }
 }
