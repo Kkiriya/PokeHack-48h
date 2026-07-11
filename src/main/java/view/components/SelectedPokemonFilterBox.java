@@ -5,8 +5,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 /**
- * FilterView is a JavaFX VBox that contains buttons to switch between different views (ImagePanel, StatsView, TypesView).
- * It uses CardInfoButtons for the buttons and dynamically updates the content pane based on user interaction.
+ * Displays the selected Pokémon card and lets the user switch between sprite, stats, types, and id views.
+ * The content area is updated through the CardInfoButtons actions.
  */
 public class SelectedPokemonFilterBox extends VBox {
     public final ImageView imageView;

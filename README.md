@@ -31,6 +31,30 @@ Hackathon de 48 heures visant à développer une application en Java. L'applicat
 
 ## Screenshots
 
+**Nombre de Pokémon capturés (Dans la base de données)**
+
+![Nombre de Pokémon capturés](src/main/resources/screenshots/captured.png)
+
+**Liste des Pokémon capturés (Dans la base de données)**
+
+![Liste des Pokémon capturés](src/main/resources/screenshots/capturedPokemons.png)
+
+**Bloc des évolutions d'un Pokémon**
+
+![Bloc des évolutions d'un Pokémon](src/main/resources/screenshots/evolutions.png)
+
+**Pokémon sélectionné de la base de données**
+
+![Pokémon sélectionné](src/main/resources/screenshots/selected.png)
+
+**Pokémon recherché via l'API**
+
+![alt text](src/main/resources/screenshots/wildPokemon.png)
+
+**Application complète**
+
+![Application complète](src/main/resources/screenshots/completeApp.png)
+
 ---
 
 ## Lien vidéo démo
