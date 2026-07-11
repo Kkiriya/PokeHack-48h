@@ -114,10 +114,10 @@ public class PokedexController {
     }
 
     /**
-     * Displays a confirmation dialog before deleting a Pokémon.
+     * Displays a confirmation dialog before releasing a Pokémon.
      *
-     * @param pokemonName The name of the Pokémon to delete.
-     * @return true if the user confirms the deletion, false otherwise.
+     * @param pokemonName The name of the Pokémon to release.
+     * @return true if the user confirms the release, false otherwise.
      */
     private boolean confirmReleasePopUp(String pokemonName) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -168,7 +168,7 @@ public class PokedexController {
     }
 
     /**
-     * Deletes a Pokémon from the database by its name.
+     * Releases a Pokémon by deleting it from the database.
      *
      * @param name The name of the Pokémon to release.
      */
@@ -220,9 +220,10 @@ public class PokedexController {
     }
 
     /**
-     * Displays the details of a Pokémon in the PokedexView.
+     * Retrieves the Pokémon's type objects from its Pokémon id.
      *
-     * @param pokemonId The ID of the Pokémon to display.
+     * @param pokemonId The Pokémon id used to retrieve its types.
+     * @return the resolved type objects for this Pokémon.
      */
     private List<Type> recupererTypesPokemon(int pokemonId) throws Exception {
         return recupererTypesPokemon(service.recupererPokemonTypes(pokemonId));
