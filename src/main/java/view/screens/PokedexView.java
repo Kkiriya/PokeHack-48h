@@ -19,6 +19,7 @@ public class PokedexView {
     public final StatsView statsGrid;
     public final Label capturedCountLabel;
     public final Label pokemonNameLabel;
+    public final EvolutionsBox evolutionsBox;
 
 
     public PokedexView() {
@@ -61,7 +62,7 @@ public class PokedexView {
         capturedListView = new CapturedListView();
         capturedListView.getStyleClass().add("captured-list-view");
 
-        EvolutionsBox evolutionsBox = new EvolutionsBox();
+        evolutionsBox = new EvolutionsBox();
         evolutionsBox.getStyleClass().add("evolutions-box");
 
         capturedCountLabel = new Label("Captured: 0");
