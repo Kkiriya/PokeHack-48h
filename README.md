@@ -33,6 +33,12 @@ Hackathon de 48 heures visant à développer une application en Java. L'applicat
 
 ---
 
+## Lien vidéo démo
+
+https://vimeo.com/1208968950?share=copy&fl=sv&fe=ci
+
+---
+
 ## Instructions d'installation
 
 ### Téléchargement du projet
@@ -67,7 +73,15 @@ cp .env.template .env
 
 `src/main/resources/schema.sql`
 
-### Lancer le projet
+### Lancer avec IntelliJ
+
+1. Ouvrir le projet dans IntelliJ IDEA.
+2. Vérifier que le JDK utilisé est Java 21 ou plus.
+3. Lancer la classe `Main`.
+
+### Lancer avec Maven
+
+Si Maven est installé :
 
 ```bash
 mvn javafx:run
@@ -77,16 +91,16 @@ mvn javafx:run
 
 ## Liste des bonus implémentés
 
-- [ ] Compteur en bas
+- [X] Compteur en bas
 - [ ] Focus automatique
-- [ ] Cri du Pokémon
-- [ ] Bouton **Random**
+- [X] Cri du Pokémon - En quelque sorte
+- [X] Bouton **Random**
 - [ ] Filtre par type
 - [ ] Tri intelligent
 - [ ] Autocomplétion
 - [ ] Favoris
-- [ ] Comparateur
-- [ ] Évolutions
+- [X] Comparateur
+- [X] Évolutions
 - [ ] Mode sombre / clair
 - [ ] Team Builder
 
